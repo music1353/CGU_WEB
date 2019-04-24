@@ -1,0 +1,6 @@
+flask
+flask-cors
+gunicorn
+gevent
+flask_pymongo
+pip install APScheduler==3.6.0
