@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>cgu_web</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  </head>
+  
+  <body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+    <!-- <button id="btn" onclick="checkLogin()" style="padding-top: 50px;">點我</button> -->
+    <script>
+      // const axios = require('axios');
+
+      function checkLogin() {
+        axios.get('/api/checkLogin').then((response)=> {
+          let res = response.data;
+          console.log(res);
+        });
+      }
+
+      function UnityFunction(arg) {
+        console.log(arg);
+
+        // 英文遊戲名-level-反應時間-正確率-正確次數
+        let argArray = arg.split("-");
+        let gameNameEN = argArray[0];
+        let level = argArray[1];
+        let respTime = argArray[2];
+        let trueRate = argArray[3];
+        let trueCount = argArray[4];
+
+        console.log(gameNameEN);
+        console.log(level);
+        console.log(respTime);
+        console.log(trueRate);
+        console.log(trueCount);
+
+        // 更新遊戲玩到的level
+        // 正確率大於80%升級
+        // if(parseInt(trueRate) >= 80) {
+        //   axios.post('/api/user/updateLevel', {
+        //     gameNameEN: gameNameEN,
+        //     level: level+1
+        //   }).then((response)=> {
+        //     let res = response.data;
+        //     console.log(res);
+        //     if (res.status == '200') {
+        //       console.log(res.msg);
+        //     }
+        //   });
+        // }
+
+        // TODO: level
+        // axios.post('/api/user/updateLevel', {
+        //   gameNameEN: 'Teacher',
+        //   level: '4'
+        // }).then((response)=> {
+        //   let res = response.data;
+        //   console.log(res);
+        //   if (res.status == '200') {
+        //     console.log(res.msg);
+        //   }
+        // });
+
+        // 更新當日可玩的遊戲次數跟level
+        axios.post('/api/user/updateTimesAndLevel', {
+          gameNameEN: gameNameEN,
+          level: level,
+          trueRate: trueRate
+        }).then((response)=> {
+          let res = response.data;
+          if(res.status == '200') {
+            console.log(res.msg);
+          }
+        });
+        
+        // 儲存遊戲紀錄
+        axios.post('/api/user/saveGameRecords',{
+          gameNameEN: gameNameEN,
+          level: level,
+          respTime: respTime,
+          trueRate: trueRate,
+          trueCount: trueCount
+        }).then((response)=> {
+          let res = response.data;
+          if(res.status == '200') {
+            console.log(res.msg);
+          }
+        });
+
+        alert('遊戲結束！');
+        window.location.href = 'http://localhost:8080/user/index';
+      }
+    </script>
+  </body>
+</html>
