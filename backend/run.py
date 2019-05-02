@@ -6,6 +6,7 @@ import atexit
 from app import app
 from config import client
 from gameConfig import DB_GAMES_LIST, TEST_GAME_LIST
+from app.modules.backup_engine.drive import drive
 
 
 def print_date_time():
@@ -121,6 +122,11 @@ def backup():
         except Exception as err:
             print('backup', cmd['name'], 'error ! at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
             print('err:', err)
+
+
+    # google drive 備份
+    drive = drive()
+    drive.backup()
 
 
 scheduler = BackgroundScheduler()

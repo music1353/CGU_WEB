@@ -1,5 +1,5 @@
 from app import app
-from config import MONGO_URI, BASE_DIR, client
+from config import MONGO_URI, client
 from flask import jsonify, session, request
 
 # 連進MongoDB
