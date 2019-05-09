@@ -4,12 +4,16 @@
   <nav-header-user></nav-header-user>
   <v-content>
     <v-container fluid grid-list-md grid-list-sm>
-      <div id="award-box">
+      <div>
+        <i class="fas fa-star award-icon"></i>
+        恭喜你！ 已經獲得 <span style="color: #FFC107; font-weight: bold;">{{tokenNum}}</span> 個星星了!
+      </div>
+      <!-- <div id="award-box">
         <div class="award-center">
           <i class="fas fa-star award-icon"></i>
-          <p class="award-text">恭喜你！ 已經獲得 <span style="color: #FFC107; font-weight: bold;">{{starNum}}</span> 個星星了!</p>
+          <p class="award-text">恭喜你！ 已經獲得 <span style="color: #FFC107; font-weight: bold;">{{tokenNum}}</span> 個星星了!</p>
         </div>
-      </div>
+      </div> -->
     </v-container>
     <nav-footer-simple></nav-footer-simple>
   </v-content>
@@ -30,11 +34,12 @@ export default {
   },
   data() {
     return {
-      starNum: 25
+      tokenNum: ''
     }
   },
   mounted() {
     this.checkLogin();
+    this.getTokenNum();
   },
   methods: {
     checkLogin() {
@@ -53,6 +58,14 @@ export default {
         }
       });
     },
+    getTokenNum() {
+      axios.get('/api/token/getTokenNum').then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          this.tokenNum = res.result.token;
+        }
+      });
+    }
   }
 }
 </script>

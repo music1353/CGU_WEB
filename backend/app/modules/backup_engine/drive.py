@@ -64,8 +64,8 @@ class drive:
             fullpath = os.path.join(mypath, f)
 
             file_metadata = {
-            'name' : f,
-            'parents': [FOLDER_ID]
+                'name' : f,
+                'parents': [FOLDER_ID]
             }
             media = MediaFileUpload(fullpath,
                                     resumable=True)

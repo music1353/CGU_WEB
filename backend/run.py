@@ -65,6 +65,18 @@ def init_users_daily_games():
             users_daily_games_collect.insert_one(doc)
             print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
 
+
+def init_mission():
+    db = client['cgu_db']
+    collect = db['users_mission']
+    
+    try:
+        collect.update({}, {'$set': {'loginMission': False}})
+        print('init mission complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+    except:
+        print('init mission fail at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+
+
 def backup():
     nowTime = datetime.now().strftime("%Y-%m-%d") # 今天日期
 
@@ -131,13 +143,14 @@ def backup():
 
 scheduler = BackgroundScheduler()
 # cheduler.add_job(func=init_users_daily_games, trigger="interval", seconds=10)
-scheduler.add_job(func=backup, trigger="cron", hour=17, minute=20, second=1)
-scheduler.add_job(func=init_users_daily_games, trigger="cron", hour=18, minute=16, second=1)
+scheduler.add_job(func=backup, trigger="cron", hour=7, minute=20, second=1)
+scheduler.add_job(func=init_mission, trigger="cron", hour=15, minute=23, second=1)
+scheduler.add_job(func=init_users_daily_games, trigger="cron", hour=8, minute=16, second=1)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
-    app.run(use_reloader=False)
-    # app.run(debug=True) # 會執行兩次
+    # app.run(use_reloader=False)
+    app.run(debug=True) # 會執行兩次

@@ -34,13 +34,13 @@ export default {
       x: null,
       mode: '',
       timeout: 6000,
-      text: '',
+      // text: '',
       color: ''
     }
   },
   mounted() {
     this.color = '#'+this.parentColor;
-    this.text = this.parentText;
+    // this.text = this.parentText;
   },
   computed: {
     snackbar() {
@@ -49,6 +49,10 @@ export default {
     },
     msgFlag() {
       return this.snackbar&&this.closeFlag;
+    },
+    text() {
+      
+      return this.parentText;
     }
   }
 }

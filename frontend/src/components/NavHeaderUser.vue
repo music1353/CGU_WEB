@@ -43,10 +43,6 @@ export default {
         'title': '遊戲面板',
         'linkto': 'index',
       }, {
-        'icon': 'fas fa-chart-line',
-        'title': '數據統計',
-        'linkto': 'test',
-      }, {
         'icon': 'fas fa-trophy',
         'title': '累積金幣',
         'linkto': 'award'

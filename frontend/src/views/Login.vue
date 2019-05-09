@@ -15,7 +15,7 @@
                   <v-flex md8>
                     <v-form ref="form" v-model="valid" lazy-validation>
                       <v-text-field v-model="account" :rules="accountRules" label="帳號" required></v-text-field>
-                      <v-text-field v-model="pwd" :rules="passswordRules" label="密碼" required type="password"></v-text-field>
+                      <v-text-field v-model="pwd" :rules="passwordRules" label="密碼" required type="password"></v-text-field>
                       <v-checkbox v-model="rePassCheckbox" label="記住密碼" required ></v-checkbox>
                     </v-form>
                   </v-flex>
@@ -108,7 +108,7 @@ export default {
       accountRules: [
         v => !!v || '您還沒有填寫帳號'
       ],
-      passswordRules: [
+      passwordRules: [
         v => !!v || '您還沒有填寫密碼'
       ],
       // signup dialog
@@ -127,6 +127,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.loading = true;
         this.message = false;
+        
         axios.post('/api/login', {
           account: this.account,
           pwd: this.pwd,

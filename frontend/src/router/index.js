@@ -6,9 +6,11 @@ import UserIndex from '@/views/User/UserIndex'
 import UserAward from '@/views/User/UserAward'
 import UserGame from '@/views/User/UserGame'
 import AdminIndex from '@/views/Admin/AdminIndex'
-import AdminTestGroup from '@/views/Admin/AdminTestGroup'
+// NOTE: 2019.5.7：不用test、comp面板頁面
+// import AdminTestGroup from '@/views/Admin/AdminTestGroup'
+// import AdminComparisonGroup from '@/views/Admin/AdminComparisonGroup'
 import AdminUsersData from '@/views/Admin/AdminUsersData'
-import AdminComparisonGroup from '@/views/Admin/AdminComparisonGroup'
+import AdminUsersManage from '@/views/Admin/AdminUsersManage'
 import AdminFeedback from '@/views/Admin/AdminFeedback'
 import ParentIndex from '@/views/Parent/ParentIndex'
 import GameTest from '@/components/GameTest'
@@ -55,20 +57,25 @@ export default new Router({
       name: 'Index',
       component: AdminIndex
     },
-    {
-      path: '/admin/testGroup',
-      name: 'AdminTestGroup',
-      component: AdminTestGroup
-    },
-    {
-      path: '/admin/comparisonGroup',
-      name: 'AdminComparisonGroup',
-      component: AdminComparisonGroup
-    },
+    // {
+    //   path: '/admin/testGroup',
+    //   name: 'AdminTestGroup',
+    //   component: AdminTestGroup
+    // },
+    // {
+    //   path: '/admin/comparisonGroup',
+    //   name: 'AdminComparisonGroup',
+    //   component: AdminComparisonGroup
+    // },
     {
       path: '/admin/usersData',
       name: 'AdminUsersData',
       component: AdminUsersData
+    },
+    {
+      path: '/admin/usersManage',
+      name: 'AdminUsersManage',
+      component: AdminUsersManage
     },
     {
       path: '/admin/feedback',

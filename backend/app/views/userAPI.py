@@ -14,12 +14,11 @@ app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 def user_get_games():
     '''取得當天可以練習的遊戲
     Params:
-        account: 登入帳號
-        pwd: 登入密碼
+        None
     Returns:
         {
             'status': '200'->登入成功; '404'->登入失敗
-            'result': 使用者姓名、帳號、身份
+            'result': [{gameNameCH, gameNameEN, imgURL, reviews, link}]
             'msg': ''
         }
     '''
@@ -154,14 +153,43 @@ def user_get_is_complete():
     flag = False
     for game in games:
         if game['gameNameEN'] == gameNameEN:
-            print('gameNameEN:', gameNameEN)
-            print('complete:', game['complete'])
             flag = game['complete']
 
     resp = {
         'status': '200',
         'result': {'complete': flag},
         'msg': gameNameEN+'取得遊戲是否已完成成功'
+    }
+    return jsonify(resp)
+
+
+@app.route('/api/user/getAllGameIsComplete', methods=['GET'])
+def user_get_all_game_is_complete():
+    '''今天所有遊戲是否完成
+    Params:
+        None
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': complete
+            'msg': ''
+        }
+    '''
+
+    collect = db['users_daily_games']
+    doc = collect.find_one({'account': session['account']}, {'_id': False})
+    games = doc['games']
+
+    obj = {
+        'complete': doc['complete'],
+    }
+    for game in games:
+        obj[game['gameNameEN']] = game['complete']
+
+    resp = {
+        'status': '200',
+        'result': obj,
+        'msg': '取得今天所有遊戲是否完成成功'
     }
     return jsonify(resp)
 
@@ -220,6 +248,10 @@ def user_update_game_time():
     nowLevel = users_games_level_doc[gameNameEN]
 
     if int(trueRate) >= 80: # 有過80%, 升級
+        # 升級+20token
+        user_collect = db['users']
+        user_collect.find_one_and_update({'account': session['account']}, {'$inc': {'token': 20}})
+        
         # 若已經是最高level, 不更改level
         if nowLevel=='7' and (gameNameEN=='PrePet' or gameNameEN=='BackPet' or gameNameEN=='PreAnimal' or gameNameEN=='BackAnimal'):
             print(gameNameEN, '的最高級是7,', '現在遊玩level是', nowLevel, ', 所以不改level')
@@ -235,7 +267,7 @@ def user_update_game_time():
                 users_games_level_collect.find_one_and_update({'account': session['account']}, {'$set': {gameNameEN: str(int(level)+1)}}, upsert=False)
             elif playTimes == '1': # 第二次玩, 下一次重疊level開始
                 users_games_level_collect.find_one_and_update({'account': session['account']}, {'$set': {gameNameEN: level}}, upsert=False)
-    elif int(trueRate) < 80: # 沒過80%, 降級並且playTimes歸0
+    elif int(trueRate) < 80: # 沒過80%降級, 動物農莊、寵物樂園playTimes-1, 其他playTimes歸0
         # 降級, 如果level是1就不降
         if nowLevel == '1':
             print('因為現在level是', nowLevel, '不降級')
@@ -243,16 +275,34 @@ def user_update_game_time():
         else:
             users_games_level_collect.find_one_and_update({'account': session['account']}, {'$set': {gameNameEN: str(int(level)-1)}}, upsert=False)
 
-        # playTimes歸0
+        # 動物農莊、寵物樂園playTimes-1, 其他playTimes歸0
         newGames = []
         for game in games:
             if game['gameNameEN'] == gameNameEN:
-                obj = {
-                    'gameNameEN': gameNameEN,
-                    'playTimes': '0',
-                    'complete': True
-                }
-                newGames.append(obj)
+                # 如果是動物農莊或寵物樂園, playTimes降一級
+                if gameNameEN=='PreAnimal' or gameNameEN=='BackAnimal' or gameNameEN=='PrePet' or gameNameEN=='BackPet':
+                    if game['playTimes'] == '1': # 剩下一次遊戲次數, 玩玩這次就結束
+                        obj = {
+                            'gameNameEN': gameNameEN,
+                            'playTimes': str(int(playTimes)-1),
+                            'complete': True
+                        }
+                        newGames.append(obj)
+                    else: # 還可以玩
+                        obj = {
+                            'gameNameEN': gameNameEN,
+                            'playTimes': str(int(playTimes)-1),
+                            'complete': False
+                        }
+                        newGames.append(obj)
+                # 其他遊戲playTimes歸0
+                else:
+                    obj = {
+                        'gameNameEN': gameNameEN,
+                        'playTimes': '0',
+                        'complete': True
+                    }
+                    newGames.append(obj)
             else:
                 newGames.append(game)
 

@@ -45,17 +45,13 @@ export default {
         'title': '今日練習狀況',
         'linkto': 'index',
       }, {
-        'icon': 'fas fa-chart-line',
-        'title': '實驗組',
-        'linkto': 'testGroup',
-      }, {
-        'icon': 'fas fa-trophy',
-        'title': '對照組',
-        'linkto': 'comparisonGroup'
-      }, {
         'icon': 'fas fa-user',
         'title': '使用者資料',
         'linkto': 'usersData'
+      }, {
+        'icon': 'fas fa-user-edit',
+        'title': '使用者管理',
+        'linkto': 'usersManage'
       }, {
         'icon': 'border_color',
         'title': '意見回饋',
