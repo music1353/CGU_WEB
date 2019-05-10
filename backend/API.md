@@ -15,7 +15,7 @@
   account: "", // 帳號
   pwd: "", // 密碼
   name: "", // 測試者姓名
-  authority: "", // 身份，admin、userTest、userComp
+  authority: "", // 身份，userTest、userComp
   token: "" // [int] 獎勵點數
   ~~~
 
@@ -171,3 +171,15 @@
   | GET        | URL/token/getTokenNum  | 使用者的點數數量                     |            | token       |
   | POST       | URL/token/loginMission | 登入任務，完成任務+50                |            | addTokenNum |
   | POST       | URL/token/playMission  | 遊戲任務。完成遊戲+10，全部完成再+20 |            | addTokenNum |
+
+* **dataAPI**：資料中心
+
+  | API Method | API URL                 | Desc         | Req Params | Resp Result                                                  |
+  | ---------- | ----------------------- | ------------ | ---------- | ------------------------------------------------------------ |
+  | GET        | URL/data/user           | 使用者資料   |            | [{authority, name, account, pwd, token, parentName, parentAccount, parentPwd, phone}] |
+  | GET        | URL/data/parent         | 家長資料     |            | [{authority, account, pwd, name, phone}]                     |
+  | GET        | URL/data/admin          | 管理員資料   |            | [{name, account, pwd, authority}]                            |
+  | GET        | URL/data/game           | 遊戲紀錄資料 |            | [{ account, records: [{date, gameNameEN, level, respTime, trueRate}] }] |
+  | GET        | URL/data/questionnaires | 問卷資料     |            | [{ authority, account, name, parentAccount, parentName, questionnaires:[{date, focusValue, emotionValue, motivationValue, feedback}] }] |
+
+  

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
+    "json2csv": "^4.5.1",
+    "jsonexport": "^2.4.1",
     "material-design-icons": "^3.0.1",
     "material-design-icons-iconfont": "^4.0.5",
     "vue": "^2.5.2",

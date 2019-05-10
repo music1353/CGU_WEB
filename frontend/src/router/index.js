@@ -12,6 +12,7 @@ import AdminIndex from '@/views/Admin/AdminIndex'
 import AdminUsersData from '@/views/Admin/AdminUsersData'
 import AdminUsersManage from '@/views/Admin/AdminUsersManage'
 import AdminFeedback from '@/views/Admin/AdminFeedback'
+import AdminDataCenter from '@/views/Admin/AdminDataCenter'
 import ParentIndex from '@/views/Parent/ParentIndex'
 import GameTest from '@/components/GameTest'
 
@@ -81,6 +82,11 @@ export default new Router({
       path: '/admin/feedback',
       name: 'AdminFeedback',
       component: AdminFeedback
+    },
+    {
+      path: '/admin/dataCenter',
+      name: 'AdminDataCenter',
+      component: AdminDataCenter
     },
     {
       path:'/parent/index',

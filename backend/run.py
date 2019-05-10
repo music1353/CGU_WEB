@@ -142,7 +142,6 @@ def backup():
 
 
 scheduler = BackgroundScheduler()
-# cheduler.add_job(func=init_users_daily_games, trigger="interval", seconds=10)
 scheduler.add_job(func=backup, trigger="cron", hour=7, minute=20, second=1)
 scheduler.add_job(func=init_mission, trigger="cron", hour=15, minute=23, second=1)
 scheduler.add_job(func=init_users_daily_games, trigger="cron", hour=8, minute=16, second=1)

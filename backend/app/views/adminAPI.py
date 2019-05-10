@@ -2,6 +2,7 @@ from app import app
 from config import MONGO_URI, client
 from flask import jsonify, session, request
 from datetime import datetime
+from app.modules.game_setter import setter
 import pprint
 
 # 連進MongoDB
@@ -176,7 +177,7 @@ def admin_get_feedback():
     ])
     doc_list = list(doc)
 
-    result_list = [] = []
+    result_list = []
     for item in doc_list:
         chName = item['name']
         chAccount = item['account']
@@ -275,7 +276,7 @@ def admin_add_one_user():
             'pwd': pwd,
             'name': name,
             'authority': authority,
-            'token': '0'
+            'token': 0
         }
         user_collect.insert_one(user_obj)
 
@@ -283,7 +284,7 @@ def admin_add_one_user():
         users_daily_games_obj = {
             'account': account,
             'complete': False,
-            'games': []
+            'games': setter.set_game(authority)
         }
         users_daily_games_collect.insert_one(users_daily_games_obj)
 

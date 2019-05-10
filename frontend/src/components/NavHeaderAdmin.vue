@@ -56,6 +56,10 @@ export default {
         'icon': 'border_color',
         'title': '意見回饋',
         'linkto': 'feedback'
+      }, {
+        'icon': 'fas fa-database',
+        'title': '資料中心',
+        'linkto': 'dataCenter'
       }]
     }
   },

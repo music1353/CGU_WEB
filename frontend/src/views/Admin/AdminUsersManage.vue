@@ -287,15 +287,16 @@ export default {
       this.newOneDialog = false;
       this.$refs.userForm.resetValidation();
       this.$refs.parentForm.resetValidation();
-      this.addNewUserAuthority='userTest';
-      this.addNewUserName='';
-      this.addNewUserAccount='';
-      this.addNewUserPwd='';
-      this.addNewParentAuthority='parentTest';
-      this.addNewParentName='';
-      this.addNewParentAccount='';
-      this.addNewParentPwd='';
-      this.addNewParentPhone='';
+      this.authSelect = '實驗組'
+      this.addNewUserAuthority = 'userTest';
+      this.addNewUserName = '';
+      this.addNewUserAccount = '';
+      this.addNewUserPwd = '';
+      this.addNewParentAuthority = 'parentTest';
+      this.addNewParentName = '';
+      this.addNewParentAccount = '';
+      this.addNewParentPwd = '';
+      this.addNewParentPhone = '';
     },
     newOneUser() {
       if (this.$refs.userForm.validate() && this.$refs.parentForm.validate()) {
