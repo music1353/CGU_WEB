@@ -125,12 +125,13 @@
 
 * **baseAPI**
 
-  | API Method | API URL         | Desc             | Req Params   | Resp Result                                                  |
-  | ---------- | --------------- | ---------------- | ------------ | ------------------------------------------------------------ |
-  | POST       | URL/login       | 登入             | account, pwd | name, account, authority (判斷身份。admin、userTest、userComp、parent) |
-  | POST       | URL/logout      | 登出             |              |                                                              |
-  | GET        | URL/checkLogin  | 檢查登入狀態     |              | status(boolean), authority, account                          |
-  | GET        | URL/getUserInfo | 取得登入者的資料 |              | account, name, authority, phone                              |
+  | API Method | API URL         | Desc             | Req Params    | Resp Result                                                  |
+  | ---------- | --------------- | ---------------- | ------------- | ------------------------------------------------------------ |
+  | POST       | URL/login       | 登入             | account, pwd  | name, account, authority (判斷身份。admin、userTest、userComp、parent) |
+  | POST       | URL/logout      | 登出             |               |                                                              |
+  | GET        | URL/checkLogin  | 檢查登入狀態     |               | status(boolean), authority, account                          |
+  | GET        | URL/getUserInfo | 取得登入者的資料 |               | account, name, authority, phone                              |
+  | GET        | URL/forgetPwd   | 忘記密碼取回     | name, account | pwd                                                          |
 
 * **userAPI**：測試者
 

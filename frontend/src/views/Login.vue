@@ -16,68 +16,44 @@
                     <v-form ref="form" v-model="valid" lazy-validation>
                       <v-text-field v-model="account" :rules="accountRules" label="帳號" required></v-text-field>
                       <v-text-field v-model="pwd" :rules="passwordRules" label="密碼" required type="password"></v-text-field>
-                      <v-checkbox v-model="rePassCheckbox" label="記住密碼" required ></v-checkbox>
                     </v-form>
                   </v-flex>
-                  <v-flex md4 style="padding-top: 10px;">
+                  <v-flex md4 class="mt-5">
                     <v-btn class="white--text" color="orange darken-1" :disabled="!valid" @click="login" :loading="loading">登入</v-btn>
-                    <a class="signup-btn" style="cursor: pointer;" @click="dialog=true">註冊</a>
-                    <a class="forget-pass-btn" href="">忘記密碼?</a>
+                    <a class="forget-pass-btn" href="javascript:void(0)" @click="forgetPwd">忘記密碼?</a>
                   </v-flex>
                 </v-layout>
               </v-flex>
             </v-container>
           </div>
-          
         </v-flex>
       </v-layout>
     </v-container>
-  </section>
-
-  <!-- 註冊 dialog start -->
-  <v-layout row justify-center>
-    <v-dialog v-model="dialog"  max-width="600px">
+    <!-- forget password dialog -->
+    <v-dialog v-model="forgetPwdDialog" max-width="290">
       <v-card>
-        <v-card-title>
-          <span class="headline">註冊</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container grid-list-md>
-            <v-layout wrap>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="姓名" required></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Legal middle name" hint="example of helper text only on focus"></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6 md4>
-                <v-text-field label="Legal last name*" hint="example of persistent helper text" persistent-hint required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field label="Email*" required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
-                <v-text-field label="Password*" type="password" required></v-text-field>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-select :items="['0-17', '18-29', '30-54', '54+']" label="年齡*" required style="top: 0px;"></v-select>
-              </v-flex>
-              <v-flex xs12 sm6>
-                <v-autocomplete :items="['Skiing', 'Ice hockey', 'Soccer', 'Basketball', 'Hockey', 'Reading', 'Writing', 'Coding', 'Basejump']" label="Interests" multiple></v-autocomplete>
-              </v-flex>
-            </v-layout>
-          </v-container>
-          <small>*indicates required field</small>
-        </v-card-text>
+        <v-card-title class="headline">找回密碼</v-card-title>
+        <v-container>
+            <v-form ref="forgetPwdForm" v-model="forgetPwdFormValid" lazy-validation>
+              <div v-if="getForgetPwdMsg==''">
+                <v-text-field label="你的帳號" v-model="checkAccount" required :rules="checkAccountRules"></v-text-field>
+                <v-text-field label="你的姓名" v-model="checkName" required :rules="checkNameRules"></v-text-field>
+              </div>
+              <div v-else>
+                <p style="font-size: 20px;">{{ getForgetPwdMsg }}</p>
+              </div>
+            </v-form>
+          
+        </v-container>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" flat @click="dialog = false">Close</v-btn>
-          <v-btn color="blue darken-1" flat @click="dialog = false">Save</v-btn>
+          <v-btn color="green darken-1" flat="flat" @click="forgetPwdDialog=false">取消</v-btn>
+          <v-btn v-if="getForgetPwdMsg==''" color="green darken-1" flat="flat" @click="submit">送出</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-  </v-layout>
-  <!-- 註冊 dialog end -->
+    <!-- forget password dialog -->
+  </section>
   <loading :parentToChild="loading" parentText="登入中..."></loading>
   <message :parentFlag="message" parentColor='EF5350' parentText='帳號或密碼錯誤！'></message>
   <nav-footer></nav-footer>
@@ -116,7 +92,19 @@ export default {
       // loading
       loading: false,
       // message
-      message: false
+      message: false,
+      // forgetPwdDialog
+      forgetPwdDialog: false,
+      forgetPwdFormValid: true,
+      checkName: '',
+      checkAccount: '',
+      checkNameRules: [
+        v => !!v || '您還沒有填寫姓名'
+      ],
+      checkAccountRules: [
+        v => !!v || '您還沒有填寫帳號'
+      ],
+      getForgetPwdMsg: ''
     };
   },
   mounted() {
@@ -162,6 +150,28 @@ export default {
           }
         }
       });
+    },
+    forgetPwd() {
+      this.checkName = '';
+      this.checkAccount = '';
+      this.getForgetPwdMsg = '';
+      this.$refs.forgetPwdForm.resetValidation();
+      this.forgetPwdDialog = true;
+    },
+    submit() {
+      axios.get('/api/forgetPwd', {
+        params: {
+          'name': this.checkName,
+          'account': this.checkAccount
+        }
+      }).then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          this.getForgetPwdMsg = '你的密碼是：'+res.result.pwd;
+        } else {
+          this.getForgetPwdMsg = res.msg;
+        }
+      })
     }
   } 
 }

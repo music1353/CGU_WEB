@@ -96,7 +96,7 @@
               <v-form ref="userForm" v-model="userValid" lazy-validation>
                 <v-text-field label="小朋友身份" v-model="addNewUserAuthority" required style="width: 80%;" disabled></v-text-field>
                 <v-text-field label="小朋友姓名" v-model="addNewUserName" required :rules="nameRules" style="width: 80%;"></v-text-field>
-                <v-text-field label="小朋友帳號" v-model="addNewUserAccount" required :rules="accountRules" style="width: 80%;"></v-text-field>
+                <v-text-field label="小朋友帳號" v-model="addNewUserAccount" required :rules="accountRules" :hint="addNewUserAccountHint" style="width: 80%;"></v-text-field>
                 <v-text-field label="小朋友密碼" v-model="addNewUserPwd" required :rules="passwordRules" style="width: 80%;"></v-text-field>
               </v-form>
             </v-flex>
@@ -107,7 +107,7 @@
               <v-form ref="parentForm" v-model="parentValid" lazy-validation>
                 <v-text-field label="家長身份" v-model="addNewParentAuthority" required style="width: 80%;" disabled></v-text-field>
                 <v-text-field label="家長姓名" v-model="addNewParentName" required :rules="nameRules" style="width: 80%;"></v-text-field>
-                <v-text-field label="家長帳號" v-model="addNewParentAccount" :rules="accountRules" required style="width: 80%;"></v-text-field>
+                <v-text-field label="家長帳號" v-model="addNewParentAccount" :rules="accountRules" :hint="addNewParentAccountHint" required style="width: 80%;"></v-text-field>
                 <v-text-field label="家長密碼" v-model="addNewParentPwd" required :rules="passwordRules"style="width: 80%;"></v-text-field>
                 <v-text-field label="家長電話" v-model="addNewParentPhone" required :rules="phoneRules" style="width: 80%;"></v-text-field>
               </v-form>
@@ -171,10 +171,12 @@ export default {
       addNewUserAuthority: 'userTest',
       addNewUserName: '',
       addNewUserAccount: '',
+      addNewUserAccountHint: '建議使用 testXXXX 作為帳號',
       addNewUserPwd: '',
       addNewParentAuthority: 'parentTest',
       addNewParentName: '',
       addNewParentAccount: '',
+      addNewParentAccountHint: '建議使用 parentTXXXX 作為帳號',
       addNewParentPwd: '',
       addNewParentPhone: '',
       nameRules: [
@@ -278,9 +280,13 @@ export default {
       if (item == '實驗組') {
         this.addNewUserAuthority='userTest';
         this.addNewParentAuthority='parentTest';
+        this.addNewUserAccountHint='建議使用 testXXXX 作為帳號'
+        this.addNewParentAccountHint='建議使用 parentTXXXX 作為帳號'
       } else if (item == '對照組') {
         this.addNewUserAuthority='userComp';
         this.addNewParentAuthority='parentComp';
+        this.addNewUserAccountHint='建議使用 compXXXX 作為帳號'
+        this.addNewParentAccountHint='建議使用 parentCXXXX 作為帳號'
       }
     },
     closeNewOneDialog() {

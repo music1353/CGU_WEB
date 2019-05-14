@@ -186,3 +186,99 @@ def get_user_info():
         'msg': '登入成功'
     }
     return jsonify(resp)
+
+
+@app.route('/api/forgetPwd', methods=['GET'])
+def forget_password():
+    '''忘記密碼取回
+    Params:
+        name, account
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': pwd
+            'msg': ''
+        }
+    '''
+
+    name = request.args.get("name")
+    account = request.args.get("account")
+
+    
+    user_collect = db['users']
+    user_doc = user_collect.find_one({'account': account}, {'_id': False})
+
+    admin_collect = db['admins']
+    admin_doc = admin_collect.find_one({'account': account}, {'_id': False})
+
+    parent_collect = db['parents']
+    parent_doc = parent_collect.find_one({'account': account}, {'_id': False})
+
+    # 先驗證身份
+    authority = ''
+    if user_doc:
+        authority = 'user'
+    elif admin_doc:
+        authority = 'admin'
+    elif parent_doc:
+        authority = 'parent'
+
+    if authority == '': # 資料庫無此帳號
+        resp = {
+            'status': '404',
+            'result': '',
+            'msg': '沒有此帳號！'
+        }
+        return jsonify(resp)
+    elif authority == 'user':
+        if user_doc['name'] == name: # 看name是否正確
+            resp = {
+                'status': '200',
+                'result': {
+                    'pwd': user_doc['pwd']
+                },
+                'msg': '取回密碼成功！'
+            }
+            return jsonify(resp)
+        else:
+            resp = {
+                'status': '404',
+                'result': '',
+                'msg': '姓名驗證錯誤！'
+            }
+            return jsonify(resp)
+    elif authority == 'admin':
+        if admin_doc['name'] == name: # 看name是否正確
+            resp = {
+                'status': '200',
+                'result': {
+                    'pwd': admin_doc['pwd']
+                },
+                'msg': '取回密碼成功！'
+            }
+            return jsonify(resp)
+        else:
+            resp = {
+                'status': '404',
+                'result': '',
+                'msg': '姓名驗證錯誤！'
+            }
+            return jsonify(resp)
+    elif authority == 'parent':
+        if parent_doc['name'] == name: # 看name是否正確
+            resp = {
+                'status': '200',
+                'result': {
+                    'pwd': parent_doc['pwd']
+                },
+                'msg': '取回密碼成功！'
+            }
+            return jsonify(resp)
+        else:
+            resp = {
+                'status': '404',
+                'result': '',
+                'msg': '姓名驗證錯誤！'
+            }
+            return jsonify(resp)
+
