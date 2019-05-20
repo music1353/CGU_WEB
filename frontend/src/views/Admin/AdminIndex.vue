@@ -8,7 +8,7 @@
       <div class="test-group panel">
         <div class="panel-title">實驗組</div>
         <div class="panel-cards">
-          <v-layout align-center justify-start row fill-height>
+          <v-layout align-center justify-start row fill-height wrap>
             <v-flex layout lg2 md3 v-for="item in testGroupData" :key="item.account" style="margin: 7px;">
               <v-hover>
                 <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto" width="344">
@@ -37,7 +37,7 @@
       <div class="comparison-group panel">
         <div class="panel-title">對照組</div>
         <div class="panel-cards">
-          <v-layout align-center justify-start row fill-height>
+          <v-layout align-center justify-start row fill-height wrap>
             <v-flex layout lg2 md3 v-for="item in compGroupData" :key="item.account" style="margin: 7px;">
               <v-hover>
                 <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto" width="344">

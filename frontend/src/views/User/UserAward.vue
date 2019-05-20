@@ -4,17 +4,33 @@
   <nav-header-user></nav-header-user>
   <v-content>
     <v-container fluid grid-list-md grid-list-sm>
-      <div>
+      <div style="font-size: 27px;" class="mb-4">
         <i class="fas fa-star award-icon"></i>
-        恭喜你！ 已經獲得 <span style="color: #FFC107; font-weight: bold;">{{tokenNum}}</span> 個星星了!
+        你有 <span style="color: #FFC107; font-weight: bold;">{{tokenNum}}</span> 個星星
       </div>
-      <!-- <div id="award-box">
-        <div class="award-center">
-          <i class="fas fa-star award-icon"></i>
-          <p class="award-text">恭喜你！ 已經獲得 <span style="color: #FFC107; font-weight: bold;">{{tokenNum}}</span> 個星星了!</p>
-        </div>
-      </div> -->
+      <!-- 禮品區 -->
+      <v-layout align-center justify-start row fill-height wrap class="mb-4">
+        <v-flex lg4 md6 v-for="item in giftList" :key="item.name" class="mb-3">
+          <v-card>
+            <v-img :src="item.imgURL" height="200px"></v-img>
+            <v-card-actions class="mt-3 pb-4 mr-2 ml-2">
+              <v-layout row wrap>
+                <v-flex md10>
+                  <span style="display: inline-block; font-size: 23px; height: 28px; line-height: 28px;">{{ item.name }}</span>
+                  <v-icon style="display: inline-block; font-size:17px; line-height: 22px; margin-left: 5px;">star</v-icon>
+                  <span class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken }}</span>
+                </v-flex>
+                <v-flex md2>
+                  <a href="javascript:void(0)" id="exchange-btn" v-if="tokenNum>item.needToken" @click="exchange(item.name)">兌換</a>
+                </v-flex>
+              </v-layout>
+            </v-card-actions class="mt-4 mb-4 mr-2 ml-2">
+          </v-card>
+        </v-flex>
+      </v-layout>
+      <!-- 禮品區 -->
     </v-container>
+    <message :parentFlag="giftFlag" :parentColor='giftColor' :parentText='giftMsg'></message>
     <nav-footer-simple></nav-footer-simple>
   </v-content>
 </v-app>
@@ -26,20 +42,27 @@ import axios from 'axios'
 
 import NavHeaderUser from '@/components/NavHeaderUser'
 import NavFooterSimple from '@/components/NavFooterSimple'
+import Message from "@/components/_partial/Message.vue"
 
 export default {
   components: {
     NavHeaderUser,
-    NavFooterSimple
+    NavFooterSimple,
+    Message
   },
   data() {
     return {
-      tokenNum: ''
+      tokenNum: '',
+      giftFlag: false,
+      giftColor: '',
+      giftMsg: '',
+      giftList: []
     }
   },
   mounted() {
     this.checkLogin();
     this.getTokenNum();
+    this.getGiftList();
   },
   methods: {
     checkLogin() {
@@ -65,6 +88,31 @@ export default {
           this.tokenNum = res.result.token;
         }
       });
+    },
+    getGiftList() {
+      axios.get('/api/gift/getGifts').then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          this.giftList = res.result;
+        }
+      });
+    },
+    exchange(giftName) {
+      this.giftFlag = false;
+
+      axios.post('/api/gift/exchange', {
+        giftName: giftName
+      }).then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          this.getTokenNum();
+          this.getGiftList();
+
+          this.giftColor = '8BC34A';
+          this.giftMsg = res.msg;
+          this.giftFlag = true;
+        }
+      })
     }
   }
 }
@@ -95,6 +143,16 @@ export default {
   #award-box .award-center .award-text {
     line-height: 130px;
     font-size: 35px;
+  }
+
+  #exchange-btn {
+    display: inline-block;
+    color: #fb8c00;
+    display: inline-block; 
+    font-size:17px; 
+    height: 28px; 
+    line-height: 28px;
+    text-decoration: none;
   }
   
 </style>

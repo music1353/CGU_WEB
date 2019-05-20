@@ -35,11 +35,11 @@ export default {
       mode: '',
       timeout: 6000,
       // text: '',
-      color: ''
+      // color: ''
     }
   },
   mounted() {
-    this.color = '#'+this.parentColor;
+    // this.color = '#'+this.parentColor;
     // this.text = this.parentText;
   },
   computed: {
@@ -51,8 +51,10 @@ export default {
       return this.snackbar&&this.closeFlag;
     },
     text() {
-      
       return this.parentText;
+    },
+    color() {
+      return '#'+this.parentColor;
     }
   }
 }

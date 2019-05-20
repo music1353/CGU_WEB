@@ -44,7 +44,7 @@ export default {
         'linkto': 'index',
       }, {
         'icon': 'fas fa-trophy',
-        'title': '累積金幣',
+        'title': '兌換禮物',
         'linkto': 'award'
       }]
     }

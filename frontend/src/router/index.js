@@ -9,8 +9,10 @@ import AdminIndex from '@/views/Admin/AdminIndex'
 // NOTE: 2019.5.7：不用test、comp面板頁面
 // import AdminTestGroup from '@/views/Admin/AdminTestGroup'
 // import AdminComparisonGroup from '@/views/Admin/AdminComparisonGroup'
-import AdminUsersData from '@/views/Admin/AdminUsersData'
+// NOTE: 2019.5.15：用AdminUsersManage取代 
+// import AdminUsersData from '@/views/Admin/AdminUsersData'
 import AdminUsersManage from '@/views/Admin/AdminUsersManage'
+import AdminGiftRecord from '@/views/Admin/AdminGiftRecord'
 import AdminFeedback from '@/views/Admin/AdminFeedback'
 import AdminDataCenter from '@/views/Admin/AdminDataCenter'
 import ParentIndex from '@/views/Parent/ParentIndex'
@@ -68,15 +70,20 @@ export default new Router({
     //   name: 'AdminComparisonGroup',
     //   component: AdminComparisonGroup
     // },
-    {
-      path: '/admin/usersData',
-      name: 'AdminUsersData',
-      component: AdminUsersData
-    },
+    // {
+    //   path: '/admin/usersData',
+    //   name: 'AdminUsersData',
+    //   component: AdminUsersData
+    // },
     {
       path: '/admin/usersManage',
       name: 'AdminUsersManage',
       component: AdminUsersManage
+    },
+    {
+      path: '/admin/giftRecord',
+      name: 'AdminGiftRecord',
+      component: AdminGiftRecord
     },
     {
       path: '/admin/feedback',

@@ -45,13 +45,13 @@ export default {
         'title': '今日練習狀況',
         'linkto': 'index',
       }, {
-        'icon': 'fas fa-user',
-        'title': '使用者資料',
-        'linkto': 'usersData'
-      }, {
         'icon': 'fas fa-user-edit',
         'title': '使用者管理',
         'linkto': 'usersManage'
+      }, {
+        'icon': 'fas fa-gift',
+        'title': '兌換紀錄',
+        'linkto': 'giftRecord'
       }, {
         'icon': 'border_color',
         'title': '意見回饋',

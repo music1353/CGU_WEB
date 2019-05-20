@@ -247,7 +247,7 @@ def user_update_game_time():
     users_games_level_doc = users_games_level_collect.find_one({'account': session['account']}, {'_id': False})
     nowLevel = users_games_level_doc[gameNameEN]
 
-    if int(trueRate) >= 80: # 有過80%, 升級
+    if float(trueRate) >= 80: # 有過80%, 升級
         # 升級+20token
         user_collect = db['users']
         user_collect.find_one_and_update({'account': session['account']}, {'$inc': {'token': 20}})
@@ -256,8 +256,11 @@ def user_update_game_time():
         if nowLevel=='7' and (gameNameEN=='PrePet' or gameNameEN=='BackPet' or gameNameEN=='PreAnimal' or gameNameEN=='BackAnimal'):
             print(gameNameEN, '的最高級是7,', '現在遊玩level是', nowLevel, ', 所以不改level')
             pass
-        elif nowLevel=='4' and (gameNameEN=='Teacher' or gameNameEN=='Where'):
+        elif nowLevel=='4' and gameNameEN=='Teacher':
             print(gameNameEN, '的最高級是4,', '現在遊玩level是', nowLevel, ', 所以不改level')
+            pass
+        elif nowLevel=='3' and gameNameEN=='Where':
+            print(gameNameEN, '的最高級是3,', '現在遊玩level是', nowLevel, ', 所以不改level')
             pass
         elif nowLevel=='8' and gameNameEN=='Ball':
             print(gameNameEN, '的最高級是8,', '現在遊玩level是', nowLevel, ', 所以不改level')

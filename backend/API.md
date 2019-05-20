@@ -1,3 +1,10 @@
+# 啟動伺服器
+
+* Use Flask：`python run.py`
+* Use Gunicorn：`gunicorn -w 4 -b 127.0.0.1:5000 run:app`
+
+
+
 # 資料庫 (MongoDB)
 
 * **admins**
@@ -100,6 +107,22 @@
   content: "" // 回饋內
   ~~~
 
+* **gifts**：禮物列表
+
+  ~~~json
+  name: "", // 禮物名稱
+  imgURL: "", // 禮物圖片url
+  needToken: 0 // [int] 需要的token數量
+  ~~~
+
+* **gift_exchange**：禮物申請列表
+
+  ~~~json
+  studentAccount: "", // 申請人的帳號
+  date: "", // [yyyy-mm-dd] 申請日期
+  isGive: false // [boolean] 是否已經給禮物
+  ~~~
+
 
 
 # Restful API
@@ -157,6 +180,7 @@
   | GET        | URL/admin/getFeedback       | 取得請求日期的家長的回饋                    | date                                                         | [{chAccount, chName, pAccount, pName, pAuthority, focusValue, emotionValue, motivationValue, feedback}] |
   | POST       | URL/admin/addOneUser        | 增加一位使用者(user綁parent)                | authority, account, pwd, name, Pauthority(家長權限), Paccount(家長帳號), Ppwd(家長密碼), Pname(家長姓名), phone |                                                              |
   | POST       | URL/admin/delOneUser        | 刪除一位使用者(user綁parent)                | account, Paccount(家長帳號)                                  |                                                              |
+  | POST       | URL/admin/addCsvUser        | 批次增加使用者                              | [{身份, 姓名, 帳號, 密碼, 家長姓名, 家長帳號, 家長密碼, 聯絡電話}] |                                                              |
 
 * **parentAPI**：家長
 
@@ -183,4 +207,14 @@
   | GET        | URL/data/game           | 遊戲紀錄資料 |            | [{ account, records: [{date, gameNameEN, level, respTime, trueRate}] }] |
   | GET        | URL/data/questionnaires | 問卷資料     |            | [{ authority, account, name, parentAccount, parentName, questionnaires:[{date, focusValue, emotionValue, motivationValue, feedback}] }] |
 
+* **giftAPI**：禮物相關api
+
+  | API Method | API URL                  | Desc         | Req Params | Resp Result                                                  |
+  | ---------- | ------------------------ | ------------ | ---------- | ------------------------------------------------------------ |
+  | GET        | URL/gift/getGifts        | 取得禮品列表 |            | [{name, imgURL, needToken}]                                  |
+  | POST       | URL/gift/exchange        | 兌換禮品     | giftName   |                                                              |
+  | GET        | URL/gift/exchangeRecords | 兌換禮品紀錄 |            | [{exchangeId, userAccount, userName, giftName, date, isGive}] |
+  | POST       | URL/gift/sendGift        | 送出禮物     | exchangeId |                                                              |
+
   
+

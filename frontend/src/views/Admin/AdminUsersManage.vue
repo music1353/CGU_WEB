@@ -12,10 +12,20 @@
           <v-btn round color="#F57C00" class="white--text mt-2" @click="newOneDialog=true">新增使用者
             <v-icon right dark style="font-size: 15px;">fas fa-user-plus</v-icon>
           </v-btn>
-          <!-- <v-btn color="warning" fab dark class="mt-0" small>
-            <v-icon>account_circle</v-icon>
-          </v-btn> -->
         </v-flex>
+        <!-- TODO: 批量新增 -->
+        <v-flex md2 class="pb-2">
+          <v-tooltip bottom>
+              <v-btn slot="activator" round color="green darken-2" class="white--text mt-2" @click="handlFileUpload">批量新增
+                <v-icon right dark style="font-size: 15px;">fas fa-file-csv</v-icon>
+              </v-btn>
+            <span>csv格式：身份 (test/comp), 姓名, 帳號, 密碼, 家長姓名, 家長帳號, 家長密碼, 聯絡電話</span>
+          </v-tooltip>
+          <input type="file" id="csvUpload" ref="csvUpload" accept=".csv" @change="getUploadFile">
+        </v-flex>
+         <message :parentFlag="csvFlag" :parentColor='csvColor' :parentText='csvMsg
+  '></message>
+        <!-- 批量新增 -->
       </v-layout>
     </v-container>
 
@@ -128,6 +138,7 @@
 </template>
 <script>
 import axios from 'axios'
+import Papa from 'papaparse'
 import NavHeaderAdmin from '@/components/NavHeaderAdmin'
 import Message from "@/components/_partial/Message.vue"
 
@@ -191,6 +202,11 @@ export default {
       phoneRules: [
         v => !!v || '您還沒有填寫密碼'
       ],
+      // 批量新增使用者
+      csvFlag: false,
+      csvColor: '',
+      csvMsg: '',
+      csvFile: '',
     }
   },
   computed: {
@@ -331,7 +347,62 @@ export default {
           }
         });
       }
+    },
+    // TODO: 測試中
+    handlFileUpload() {
+      let uploadbtn = this.$refs.csvUpload;
+      csvUpload.click();
+    },
+    getUploadFile() {
+      let uploadbtn = this.$refs.csvUpload;
+      this.csvFile = this.$refs.csvUpload.files[0];
+      console.log(this.csvFile);
+      this.csvFlag = false;
+
+      let self = this;
+      let data = Papa.parse(this.csvFile, {
+        header: true,
+        complete(results) {
+          // 檢測csv是否符合格式
+          let keys = Object.keys(results.data[0]);
+          if (keys.sort().toString() == ["身份", "姓名", "帳號", "密碼", "家長姓名", "家長帳號", "家長密碼", "聯絡電話"].sort().toString()) {
+            console.log('符合格式');
+            axios.post('/api/admin/addCsvUser', {
+              csvData: results.data
+            }).then((response) => {
+              let res = response.data;
+              if (res.status=='200') {
+                self.csvColor = '8BC34A';
+                self.csvMsg = res.msg;
+                self.csvFlag = true;
+                self.getUsers();
+              } else {
+                self.csvColor = 'EF5350';
+                self.csvMsg = res.msg;
+                self.csvFlag = true;
+              }
+            });
+          } else {
+            self.csvColor = 'EF5350';
+            self.csvMsg = 'csv不符合格式！';
+            self.csvFlag = true;
+            console.log('csv不符合格式');
+            uploadbtn.type = "text";
+            uploadbtn.type = "file";
+            self.csvFile = '';
+          }
+        },
+        error(err, file, inputElem, reason) {
+          console.log('上傳失敗: ' + reason);
+        }
+      });
     }
   }
 }
 </script>
+
+<style scoped>
+ #csvUpload {
+   display: none;
+ }
+</style>

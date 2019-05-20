@@ -35,19 +35,19 @@ def init_users_daily_games():
         }
 
         if user['authority'] == 'userTest': # 實驗組
-            # if dayOfWeek==5 or dayOfWeek==6: # 禮拜六日不用練習
-            #     games = []
-            #     doc['games'] = games
-            # else: # 禮拜一 ~ 五
-            #     games = DB_GAMES_LIST[dayOfWeek]
-            #     doc['games'] = games
+            if dayOfWeek==5 or dayOfWeek==6: # 禮拜六日不用練習
+                games = []
+                doc['games'] = games
+            else: # 禮拜一 ~ 五
+                games = DB_GAMES_LIST[dayOfWeek]
+                doc['games'] = games
 
             ## 測試用
-            games = TEST_GAME_LIST
-            doc['games'] = games
+            # games = TEST_GAME_LIST
+            # doc['games'] = games
 
-            users_daily_games_collect.insert_one(doc)
-            print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+            # users_daily_games_collect.insert_one(doc)
+            # print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
         elif user['authority'] == 'userComp': # 對照組(控制組)
             comp_users_game_count_collect = db['comp_users_game_count']
             comp_users_game_count_doc = comp_users_game_count_collect.find({'_id': '0'})
@@ -142,14 +142,14 @@ def backup():
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=backup, trigger="cron", hour=7, minute=20, second=1)
-scheduler.add_job(func=init_mission, trigger="cron", hour=15, minute=23, second=1)
-scheduler.add_job(func=init_users_daily_games, trigger="cron", hour=8, minute=16, second=1)
+scheduler.add_job(func=backup, trigger="cron", hour=12, minute=59, second=1)
+scheduler.add_job(func=init_mission, trigger="cron", hour=0, minute=0, second=1)
+scheduler.add_job(func=init_users_daily_games, trigger="cron", hour=0, minute=0, second=3)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
 atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
-    # app.run(use_reloader=False)
-    app.run(debug=True) # 會執行兩次
+    app.run(use_reloader=False)
+    # app.run(debug=True) # 會執行兩次

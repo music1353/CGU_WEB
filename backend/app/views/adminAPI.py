@@ -380,3 +380,147 @@ def admin_del_one_user():
             'msg': '刪除使用者成功錯誤'
         }
         return jsonify(resp)
+
+
+# NOTE: 測試中...
+@app.route('/api/admin/addCsvUser', methods=['POST'])
+def admin_add_csv_user():
+    '''批量增加使用者(user綁parent)
+    Params:
+        [{身份, 姓名, 帳號, 密碼, 家長姓名, 家長帳號, 家長密碼, 聯絡電話}]
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': ''
+            'msg': ''
+        }
+    '''
+
+    csvData = request.json['csvData']
+    print(csvData)
+
+    user_collect = db['users']
+    users_daily_games_collect = db['users_daily_games']
+    users_games_level_collect = db['users_games_level']
+    users_games_records_collect = db['users_games_records']
+    users_mission_collect = db['users_mission']
+    parent_collect = db['parents']
+
+    user_doc = user_collect.find({}, {'_id': False})
+    parent_doc = parent_collect.find({}, {'_id': False})
+    account_list = []
+    for item in user_doc:
+        account_list.append(item['account'])
+    for item in parent_doc:
+        account_list.append(item['account'])
+
+    # 檢查是否有重複account
+    flag = False
+    for data in csvData:
+        if(data['帳號'] in account_list):
+            flag = True
+    if flag: # 有重複
+        resp = {
+            'status': '404',
+            'result': '',
+            'msg': '有重複的帳號！'
+        }
+        return jsonify(resp)
+    else:
+        for data in csvData:
+            if data['身份']=='test' or data['身份']=='comp':
+                authority = ''
+                if data['身份'] == 'test':
+                    authority = 'userTest'
+                elif data['身份'] == 'comp':
+                    authority = 'userComp'
+                account = data['帳號']
+                pwd = data['密碼']
+                name = data['姓名']
+                Pauthority = ''
+                if data['身份'] == 'test':
+                    Pauthority = 'parentTest'
+                elif data['身份'] == 'comp':
+                    Pauthority = 'parentComp'
+                Paccount = data['家長帳號']
+                Ppwd = data['家長密碼']
+                Pname = data['家長姓名']
+                phone = data['聯絡電話']
+
+                # 新增user帳號
+                user_obj = {
+                    'account': account,
+                    'pwd': pwd,
+                    'name': name,
+                    'authority': authority,
+                    'token': 0
+                }
+                user_collect.insert_one(user_obj)
+
+                # 新增 users_daily_games
+                users_daily_games_obj = {
+                    'account': account,
+                    'complete': False,
+                    'games': setter.set_game(authority)
+                }
+                users_daily_games_collect.insert_one(users_daily_games_obj)
+
+                # 新增 users_games_level
+                users_games_level_obj = {
+                    'account': account,
+                    'PrePet': '1',
+                    'BackPet': '1',
+                    'PreAnimal': '1',
+                    'BackAnimal': '1',
+                    'Teacher': '1',
+                    'Ball': '1',
+                    'Where': '1'
+                }
+                users_games_level_collect.insert_one(users_games_level_obj)
+
+                # 新增 users_games_records
+                users_games_records_obj = {
+                    'account': account,
+                    'records': []
+                }
+                users_games_records_collect.insert_one(users_games_records_obj)
+
+                # 新增 users_mission
+                users_mission_obj = {
+                    'account': account,
+                    'loginMission': False,
+                    'playMission': []
+                }
+                users_mission_collect.insert_one(users_mission_obj)
+
+                # 新增parent帳號
+                parent_obj = {
+                    'account': Paccount,
+                    'pwd': Ppwd,
+                    'name': Pname,
+                    'phone': phone,
+                    'authority': Pauthority,
+                    'childrenAccount': account,
+                    'questionnaires': []
+                }
+                parent_collect.insert_one(parent_obj)
+
+                resp = {
+                    'status': '200',
+                    'result': '',
+                    'msg': '新增使用者成功！'
+                }
+                return jsonify(resp)
+            else:
+                resp = {
+                    'status': '404',
+                    'result': '',
+                    'msg': '身份格式有誤！'
+                }
+                return jsonify(resp)
+
+
+
+        
+
+    
