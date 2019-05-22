@@ -9,8 +9,13 @@ from gameConfig import DB_GAMES_LIST, TEST_GAME_LIST
 from app.modules.backup_engine.drive import drive
 
 
-def print_date_time():
-    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+def update_week(): # 更新週次, 如果是禮拜一, week+1
+    db = client['cgu_db']
+    collect = db['week_count']
+    if datetime.now().weekday() == 0: # 星期一
+        collect.find_one_and_update({'_id': 0}, {'$inc': {'week': 1}})
+        print('update week complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+
 
 def init_users_daily_games():
     db = client['cgu_db']
@@ -143,7 +148,9 @@ def backup():
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(func=backup, trigger="cron", hour=12, minute=59, second=1)
-scheduler.add_job(func=init_mission, trigger="cron", hour=0, minute=0, second=1)
+scheduler.add_job(func=update_week, trigger="cron", hour=0, minute=0, second=1)
+# scheduler.add_job(func=update_week, trigger="cron", hour=15, minute=49, second=1)
+scheduler.add_job(func=init_mission, trigger="cron", hour=0, minute=0, second=2)
 scheduler.add_job(func=init_users_daily_games, trigger="cron", hour=0, minute=0, second=3)
 scheduler.start()
 
@@ -151,5 +158,5 @@ scheduler.start()
 atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
-    app.run(use_reloader=False)
-    # app.run(debug=True) # 會執行兩次
+    # app.run(use_reloader=False)
+    app.run(debug=True) # 會執行兩次

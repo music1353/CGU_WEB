@@ -18,10 +18,12 @@
                 <v-flex md10>
                   <span style="display: inline-block; font-size: 23px; height: 28px; line-height: 28px;">{{ item.name }}</span>
                   <v-icon style="display: inline-block; font-size:17px; line-height: 22px; margin-left: 5px;">star</v-icon>
-                  <span class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken }}</span>
+                  <span v-if="userAuth=='userTest'" class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken }}</span>
+                  <span v-if="userAuth=='userComp'" class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken*2/5 }}</span>
                 </v-flex>
                 <v-flex md2>
-                  <a href="javascript:void(0)" id="exchange-btn" v-if="tokenNum>item.needToken" @click="exchange(item.name)">兌換</a>
+                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userTest'&&tokenNum>item.needToken" @click="exchange(item.name)">兌換</a>
+                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userComp'&&tokenNum>(item.needToken*2/5)" @click="exchange(item.name)">兌換</a>
                 </v-flex>
               </v-layout>
             </v-card-actions class="mt-4 mb-4 mr-2 ml-2">
@@ -52,6 +54,7 @@ export default {
   },
   data() {
     return {
+      userAuth: '', // 為了控制needToken顯示
       tokenNum: '',
       giftFlag: false,
       giftColor: '',
@@ -69,8 +72,9 @@ export default {
       axios.get('/api/checkLogin').then((response) => {
         let res = response.data;
         if (res.status == "200") {
-          if (res.result.authority=='userTest' || res.result.authority=='compTest') {
+          if (res.result.authority=='userTest' || res.result.authority=='userComp') {
             // pass
+            this.userAuth = res.result.authority;
           } else if (res.result.authority == 'admin') {
             this.$router.push('/admin/index');
           } else if (res.result.authority=='parentTest' || res.result.authority=='parentComp') {

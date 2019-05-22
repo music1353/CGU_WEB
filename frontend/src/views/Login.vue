@@ -11,7 +11,12 @@
               <v-flex md12>
                 <!-- 登入表單部分 -->
                 <v-layout column style="margin-left: 40px; margin-right: 40px;">
-                  <div class="display-1 font-weight-medium" style="padding-bottom: 20px;">開始今天的遊戲</div>
+                  <div class="display-1 font-weight-medium" style="padding-bottom: 20px;">開始今天的遊戲
+                    <a class="ranking-btn" href="javascript:void(0)" @click="rankDialog=true">
+                      <i class="fas fa-trophy" style="font-size: 14px;"></i> 排行榜
+                    </a>
+                  </div>
+                 
                   <v-flex md8>
                     <v-form ref="form" v-model="valid" lazy-validation>
                       <v-text-field v-model="account" :rules="accountRules" label="帳號" required></v-text-field>
@@ -53,6 +58,35 @@
       </v-card>
     </v-dialog>
     <!-- forget password dialog -->
+    
+    <!-- rank dialog start -->
+    <v-dialog v-model="rankDialog" max-width="500">
+      <v-tabs v-model="rankTabModel" dark centered color="orange darken-1" slider-color="orange darken-4" @change="changeTab" fixed-tabs>
+        <v-tab v-for="item in rankModelList" :key="item">
+          {{ item }}
+        </v-tab>
+      </v-tabs>
+      <v-tabs-items>
+        <v-tab-item>
+          <v-card flat class="pa-4">
+            <p style="font-size: 18px; text-align: center;">
+              <i class="far fa-calendar-alt"></i>
+              {{ week }}
+            </p>
+            <v-data-table :headers="headers" :items="rankData" class="elevation-1" hide-actions>
+              <template slot="items" slot-scope="props">
+                <td class="text-xs">{{ props.item.ranking }}
+                  <i v-if="props.item.ranking==1" class="fas fa-crown" style="color: orange;"></i>
+                </td>
+                <td class="text-xs">{{ props.item.account }}</td>
+                <td class="text-xs">{{ props.item.token }}</td>
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-tab-item>
+      </v-tabs-items>
+    </v-dialog>
+    <!-- rank dialog end -->
   </section>
   <loading :parentToChild="loading" parentText="登入中..."></loading>
   <message :parentFlag="message" parentColor='EF5350' parentText='帳號或密碼錯誤！'></message>
@@ -104,11 +138,24 @@ export default {
       checkAccountRules: [
         v => !!v || '您還沒有填寫帳號'
       ],
-      getForgetPwdMsg: ''
+      getForgetPwdMsg: '',
+      // rank dialog
+      week: null,
+      rankDialog: false,
+      rankTabModel: null,
+      rankModelList: ['實驗組', '對照組'],
+      headers: [
+        { text: '排名', align: 'left', sortable: false, value: 'ranking' },
+        { text: '帳號', align: 'left', sortable: false, value: 'account' },
+        { text: '星星數量', sortable: false, value: 'tokenNum' }
+      ],
+      rankData: []
     };
   },
   mounted() {
     this.checkLogin();
+    this.getRank('userTest');
+    this.getWeek();
   },
   methods: {
     login () {
@@ -171,7 +218,50 @@ export default {
         } else {
           this.getForgetPwdMsg = res.msg;
         }
-      })
+      });
+    },
+    getWeek() {
+      axios.get('/api/rank/getWeek').then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          this.week = res.result.week;
+        }
+      });
+    },
+    getRank(auth) {
+      axios.get('/api/rank/getRank', {
+        params: {
+          authority: auth
+        }
+      }).then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          let data = [];
+          let count = 0;
+          let prevToken = -10;
+          res.result.forEach((element) => {
+            if (element['token'] == prevToken) {
+              element['ranking'] = count;
+              data.push(element);
+            } else {
+              count++;
+              element['ranking'] = count;
+              data.push(element);
+            }
+            prevToken = element['token'];
+          });
+
+          this.rankData = data;
+          // console.log(data);
+        }
+      });
+    },
+    changeTab() {
+      if(this.rankTabModel == 0) {
+        this.getRank('userTest');
+      } else if (this.rankTabModel == 1) {
+        this.getRank('userComp');
+      }
     }
   } 
 }
@@ -212,6 +302,20 @@ export default {
   padding-top: 13px;
   text-decoration: none;
   color: #757575;
+}
+
+.ranking-btn {
+  float: right; 
+  font-size: 16px; 
+  font-weight: 400; 
+  padding-top: 6px;
+  text-decoration: none;
+  color: black;
+  transition: ease all .3s;
+}
+
+.ranking-btn:hover {
+  color: orange;
 }
 
 </style>

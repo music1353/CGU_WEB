@@ -55,7 +55,12 @@ def gift_exchange():
     # 修改使用者token
     needToken = gift_doc['needToken']
     user_collect = db['users']
-    user_collect.find_one_and_update({'account': session['account']}, {'$inc': {'token': -needToken}})
+
+    if 'Test' in session['authority']: # 實驗組needToken不變
+        user_collect.find_one_and_update({'account': session['account']}, {'$inc': {'token': -needToken}})
+    elif 'Comp' in session['authority']: # 對照組needToken*2/5
+        user_collect.find_one_and_update({'account': session['account']}, {'$inc': {'token': -(needToken*2/5)}})
+    
     user_doc = user_collect.find_one({'account': session['account']}, {'_id': False})
 
     # 取得最後一條exchangeId

@@ -123,6 +123,13 @@
   isGive: false // [boolean] 是否已經給禮物
   ~~~
 
+* **week_count**：計算週次
+
+  ~~~json
+  _id: 0,
+  week: 1 // [int] 代表現在是第幾週
+  ~~~
+
 
 
 # Restful API
@@ -207,7 +214,7 @@
   | GET        | URL/data/game           | 遊戲紀錄資料 |            | [{ account, records: [{date, gameNameEN, level, respTime, trueRate}] }] |
   | GET        | URL/data/questionnaires | 問卷資料     |            | [{ authority, account, name, parentAccount, parentName, questionnaires:[{date, focusValue, emotionValue, motivationValue, feedback}] }] |
 
-* **giftAPI**：禮物相關api
+* **giftAPI**：禮物
 
   | API Method | API URL                  | Desc         | Req Params | Resp Result                                                  |
   | ---------- | ------------------------ | ------------ | ---------- | ------------------------------------------------------------ |
@@ -215,6 +222,13 @@
   | POST       | URL/gift/exchange        | 兌換禮品     | giftName   |                                                              |
   | GET        | URL/gift/exchangeRecords | 兌換禮品紀錄 |            | [{exchangeId, userAccount, userName, giftName, date, isGive}] |
   | POST       | URL/gift/sendGift        | 送出禮物     | exchangeId |                                                              |
+
+* **rankAPI**：排名
+
+  | API Method | API URL          | Desc             | Req Params | Resp Result                       |
+  | ---------- | ---------------- | ---------------- | ---------- | --------------------------------- |
+  | GET        | URL/rank/getRank | 取得金幣排名情況 | authority  | [{ranking, account, name, token}] |
+  | GET        | URL/rank/getWeek | 取得訓練週次     |            | week                              |
 
   
 
