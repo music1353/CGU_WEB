@@ -61,7 +61,7 @@
     
     <!-- rank dialog start -->
     <v-dialog v-model="rankDialog" max-width="500">
-      <v-tabs v-model="rankTabModel" dark centered color="orange darken-1" slider-color="orange darken-4" @change="changeTab" fixed-tabs>
+      <v-tabs v-model="rankTabModel" dark centered color="orange darken-1" slider-color="orange darken-3" @change="changeTab" fixed-tabs>
         <v-tab v-for="item in rankModelList" :key="item">
           {{ item }}
         </v-tab>

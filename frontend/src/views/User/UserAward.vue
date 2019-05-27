@@ -12,7 +12,7 @@
       <v-layout align-center justify-start row fill-height wrap class="mb-4">
         <v-flex lg4 md6 v-for="item in giftList" :key="item.name" class="mb-3">
           <v-card>
-            <v-img :src="item.imgURL" height="200px"></v-img>
+            <!-- <v-img :src="item.imgURL" height="200px"></v-img> -->
             <v-card-actions class="mt-3 pb-4 mr-2 ml-2">
               <v-layout row wrap>
                 <v-flex md10>
