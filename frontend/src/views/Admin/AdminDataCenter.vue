@@ -38,6 +38,14 @@
               <v-icon right dark>cloud_download</v-icon>
             </v-btn>
           </div>
+          <v-divider></v-divider>
+          <div class="game-data mt-3 mb-3">
+            <p class="headline">禮物兌換資料</p>
+            <v-btn color="red darken-2" class="white--text ml-0" large @click="getGiftExchangeData">
+              禮物兌換資料
+              <v-icon right dark>cloud_download</v-icon>
+            </v-btn>
+          </div>
         </v-container>
       </v-card>
     </v-container>
@@ -141,6 +149,15 @@ export default {
         if (res.status == '200') {
           let result = res.result;
           this.json2csv(result, '問卷資料');
+        }
+      });
+    },
+    getGiftExchangeData() {
+      axios.get('/api/data/giftExchange').then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          let result = res.result;
+          this.json2csv(result, '禮物兌換資料');
         }
       });
     }

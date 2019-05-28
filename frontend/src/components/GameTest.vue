@@ -56,8 +56,6 @@ export default {
       }).then((response) => {
         let res = response.data;
         if (res.status == '200') {
-          console.log(res.msg);
-          console.log('complete: '+res.result.complete);
           if(res.result.complete==true) {
             alert('今天不行玩了喔！');
             this.$router.push('/user/index');

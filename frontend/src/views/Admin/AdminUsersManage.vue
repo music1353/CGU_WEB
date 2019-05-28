@@ -356,7 +356,6 @@ export default {
     getUploadFile() {
       let uploadbtn = this.$refs.csvUpload;
       this.csvFile = this.$refs.csvUpload.files[0];
-      console.log(this.csvFile);
       this.csvFlag = false;
 
       let self = this;

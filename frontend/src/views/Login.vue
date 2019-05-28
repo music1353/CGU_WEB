@@ -191,7 +191,7 @@ export default {
               this.$router.push('/admin/index');
             } else if(res.result.authority=='userTest' || res.result.authority=='userComp') {
               this.$router.push('/user/index');
-            } else if(res.result.authority == 'parent') {
+            } else if(res.result.authority == 'parentTest' || res.result.authority == 'parentComp') {
               this.$router.push('/parent/index');
             }
           }

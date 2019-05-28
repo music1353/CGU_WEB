@@ -17,7 +17,7 @@
                   <span class="headline"> {{card.gameNameCH}} </span>
                   <div class="d-flex">
                     <div class="ml-2 grey--text text--darken-2">
-                      <span>({{ card.reviews }})</span>
+                      <span>({{ card.level }})</span>
                     </div>
                   </div>
                 </div>

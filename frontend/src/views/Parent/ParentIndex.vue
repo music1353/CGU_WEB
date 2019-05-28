@@ -5,6 +5,63 @@
   <v-content>
     <v-container>
       <v-card>
+        <!-- 孩子個遊戲的level start -->
+        <v-card-title class="headline font-weight-medium blue-grey white--text">孩子各個訓練任務的level</v-card-title>
+        <v-container>
+          <v-layout align-center justify-start row wrap>
+            <v-flex layout md3 v-for="game in childLevel" class="px-3 mb-3" :key="game.gameNameEN">
+              <v-hover>
+                <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto" width="344">
+                  <v-card-title>
+                    <div>
+                      <span class="headline"> {{game.gameNameCH}} </span>
+                      <div class="d-flex">
+                        <div class="ml-2 grey--text text--darken-2">
+                          <span>({{ game.level }})</span>
+                        </div>
+                      </div>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-btn icon class="mr-0" @click="showIntro(game.gameNameEN, game.gameNameCH)">
+                      介紹
+                    </v-btn>
+                  </v-card-title>
+                </v-card>
+              </v-hover>
+            </v-flex>
+          </v-layout>
+        </v-container>
+        <!-- 孩子個遊戲的level end -->
+        <!-- 孩子今天的訓練任務 start -->
+        <v-card-title class="headline font-weight-medium blue-grey white--text">孩子今天的訓練任務</v-card-title>
+        <v-container>
+          <v-layout align-center justify-start row wrap class="mt-3">
+            <v-flex layout xs12 md4 v-for="card in childGames" :key="card.title" class="px-3 mb-3">
+              <v-hover>
+                <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto" width="344">
+                  <v-img :aspect-ratio="16/9" :src="card.imgURL"></v-img>
+                  <v-card-title>
+                    <div>
+                      <span class="headline"> {{card.gameNameCH}} </span>
+                      <div class="d-flex">
+                        <div class="ml-2 grey--text text--darken-2">
+                          <span>({{ card.level }})</span>
+                        </div>
+                      </div>
+                    </div>
+                    <v-spacer></v-spacer>
+                    <v-btn icon class="mr-0" @click="showIntro(card.gameNameEN, card.gameNameCH)">
+                      介紹
+                    </v-btn>
+                  </v-card-title>
+                </v-card>
+              </v-hover>
+            </v-flex>
+          </v-layout>
+          <p style="font-size: 17px;" v-if="childGames.length==0">今天沒有訓練任務！</p>
+        </v-container>
+        <!-- 孩子今天的遊戲任務 end -->
+
         <v-card-title class="headline font-weight-medium blue-grey white--text">請協助評估孩子今天的訓練情形</v-card-title>
         <v-container>
           <v-subheader class="pa-0 title">1. 在注意力方面</v-subheader>
@@ -64,15 +121,25 @@
         <v-container class="pt-0 mt-0">
           <v-layout row>
             <v-flex md12 v-if="canDo">
-              <v-btn large :loading="loading" :disabled="loading" color="blue-grey" class="white--text" @click="submit" style="float: right;">
-              完成<v-icon right dark>cloud_upload</v-icon>
-            </v-btn>
+              <v-btn :loading="loading" :disabled="loading" color="blue-grey" class="white--text" @click="submit" style="float: right;">完成</v-btn>
             </v-flex>
           </v-layout>
         </v-container>   
       </v-card>
     </v-container>
   </v-content>
+
+  <v-dialog v-model="gameIntroDialog" width="500">
+    <v-card>
+      <v-card-title class="headline grey lighten-2" primary-title>{{ gameIntroTitle }}</v-card-title>
+      <v-card-text style="font-size: 20px;">{{ gameIntroContent }}</v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" flat @click="gameIntroDialog=false">了解</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 
   <message :parentFlag="completeMessage" parentColor='8BC34A' parentText='您的回饋已經確實收到！'></message>
   <message :parentFlag="errorMessage" parentColor='EF5350' parentText='發送錯誤！'></message>
@@ -83,6 +150,7 @@
 <script>
 import NavHeaderParent from '@/components/NavHeaderParent'
 import Message from '@/components/_partial/Message.vue'
+import { gameIntro } from '@/utils/GameIntro.js'
 
 export default {
   components: {
@@ -99,14 +167,20 @@ export default {
       // message
       completeMessage: false,
       errorMessage: false,
-      canDo: true
+      canDo: true,
+      // child games card
+      childGames: [],
+      childLevel: [],
+      gameIntroDialog: false,
+      gameIntroTitle: '',
+      gameIntroContent: ''
     }
   },
   mounted() {
-    this.checkDailyPSQ();
-  },
-  mounted() {
     this.checkLogin();
+    this.checkDailyPSQ();
+    this.getChildGames();
+    this.getChildLevel();
   },
   methods: {
     checkLogin() {
@@ -141,6 +215,44 @@ export default {
         }
       })
     },
+    getChildGames() {
+      axios.get('/api/parent/getChildGames').then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          if(res.msg == true) {
+            this.childGames = res.result;
+          } else {
+            console.log('今天沒有訓練任務');
+          }
+        }
+      });
+    },
+    getChildLevel() {
+      axios.get('/api/parent/getChildLevel').then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          let levelList = res.result
+
+          // 如果是今天的遊戲就highlight
+          let todayGameList = [];
+          this.childGames.forEach((element) => {
+            todayGameList.push(element['gameNameEN']);
+          });
+          levelList.forEach((element, index) => {
+            if( todayGameList.includes(element['gameNameEN']) ) {
+              levelList[index]['highlight'] = true; 
+            }
+          });
+
+          this.childLevel = levelList;
+        }
+      });
+    },
+    showIntro(gameNameEN, gameNameCH) {
+      this.gameIntroTitle = gameNameCH;
+      this.gameIntroContent = gameIntro[gameNameEN];
+      this.gameIntroDialog = true;
+    },
     submit() {
       this.loading = true;
 
@@ -158,7 +270,6 @@ export default {
         } else {
           this.loading = false;
           this.errorMessage = false;
-          console.log(res.result);
         }
       });
     }
