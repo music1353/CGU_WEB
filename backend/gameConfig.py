@@ -100,9 +100,9 @@ TEST_GAME_LIST = [
 # games中文名字、imgURL對照表 => FOR CLIENT
 GAME_CH_NAME_DICT = {
     'PrePet': '正序寵物樂園',
-    'BackPet': '後序寵物樂園',
+    'BackPet': '逆序寵物樂園',
     'PreAnimal': '正序動物農莊',
-    'BackAnimal': '後序動物農莊',
+    'BackAnimal': '逆序動物農莊',
     'Teacher': '老師點點名',
     'Ball': '球球滿天飛',
     'Where': '橡果去哪兒'

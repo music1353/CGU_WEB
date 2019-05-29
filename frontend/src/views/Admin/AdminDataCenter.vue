@@ -55,9 +55,8 @@
 </template>
 <script>
 import axios from 'axios'
-import { CsvExport } from '@/utils/CsvExport.js'
-import * as jsonexport from "jsonexport/dist"
-import fs from 'fs'
+// import * as jsonexport from "jsonexport/dist"
+import { json2csv } from '@/utils/json2csv.js'
 import NavHeaderAdmin from '@/components/NavHeaderAdmin'
 
 export default {
@@ -76,7 +75,7 @@ export default {
     checkLogin() {
       axios.get('/api/checkLogin').then((response) => {
         let res = response.data;
-        if (res.status == "200") {
+        if (res.result.status == true) {
           if (res.result.authority=='userTest' || res.result.authority=='compTest') {
             this.$router.push('/user/index');
           } else if (res.result.authority == 'admin') {
@@ -89,30 +88,17 @@ export default {
         }
       });
     },
-    json2csv(res, filename) {
-      jsonexport(res, function(err, csv){
-        if(err) return console.log(err);
-        // console.log(csv);
-
-        let Today = new Date();
-        let fileName = Today.getFullYear()+'-'+(Today.getMonth()+1)+'-'+Today.getDate()+'-'+filename;
-
-        let csvContent = "data:text/csv;charset=utf-8,\uFEFF" + csv;
-        let encodedUri = encodeURI(csvContent);
-        let link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `${(fileName || 'file')}.csv`);
-        document.body.appendChild(link); // Required for FF
-        link.click(); // This will download the data file named "my_data.csv".
-        document.body.removeChild(link); // Required for FF
-      });
-    },
     getUserData() {
       axios.get('/api/data/user').then((response) => {
         let res = response.data;
         if (res.status == '200') {
           let result = res.result;
-          this.json2csv(result, '使用者資料');
+
+          let options = {
+            headers: ['authority', 'account', 'pwd', 'name', 'token', 'parentAccount', 'parentPwd', 'parentName', 'phone'],
+            rename: ['身份', '帳號', '密碼', '姓名', '星星數', '家長帳號', '家長密碼', '家長姓名', '聯絡電話']
+          }
+          json2csv(result, '使用者資料', options);
         }
       });
     },
@@ -121,7 +107,12 @@ export default {
         let res = response.data;
         if (res.status == '200') {
           let result = res.result;
-          this.json2csv(result, '家長資料');
+
+          let options = {
+            headers: ['authority', 'account', 'pwd', 'name', 'phone'],
+            rename: ['身份', '帳號', '密碼', '姓名', '聯絡電話']
+          }
+          json2csv(result, '家長資料', options);
         }
       });
     },
@@ -130,7 +121,12 @@ export default {
         let res = response.data;
         if (res.status == '200') {
           let result = res.result;
-          this.json2csv(result, '管理員資料');
+
+          let options = {
+            headers: ['authority', 'account', 'pwd', 'name'],
+            rename: ['身份', '帳號', '密碼', '姓名']
+          }
+          json2csv(result, '管理員資料', options);
         }
       });
     },
@@ -139,7 +135,11 @@ export default {
         let res = response.data;
         if (res.status == '200') {
           let result = res.result;
-          this.json2csv(result, '遊戲紀錄資料');
+
+          let options = {
+            rename: ['帳號', '日期', '遊戲中文名稱', '遊戲英文名稱', 'level', '反應時間', '正確率', '正確次數']
+          }
+          json2csv(result, '遊戲紀錄資料', options);
         }
       });
     },
@@ -148,7 +148,12 @@ export default {
         let res = response.data;
         if (res.status == '200') {
           let result = res.result;
-          this.json2csv(result, '問卷資料');
+
+          let options = {
+            headers: ['authority', 'account', 'name', 'parentAccount', 'parentName', 'questionnaires.date', 'questionnaires.focusValue', 'questionnaires.emotionValue', 'questionnaires.motivationValue', 'questionnaires.feedback'],
+            rename: ['身份', '帳號', '姓名', '家長帳號', '家長姓名', '日期', '注意力', '情緒穩定度', '訓練動機', '回饋']
+          }
+          json2csv(result, '問卷資料', options);
         }
       });
     },
@@ -157,7 +162,12 @@ export default {
         let res = response.data;
         if (res.status == '200') {
           let result = res.result;
-          this.json2csv(result, '禮物兌換資料');
+
+          let options = {
+            headers: ['date', 'account', 'name', 'giftName', 'isGive'],
+            rename: ['帳號', '姓名', '禮物名稱', '兌換日期', '是否寄出']
+          }
+          json2csv(result, '禮物兌換資料', options);
         }
       });
     }

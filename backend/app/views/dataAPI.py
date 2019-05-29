@@ -2,6 +2,7 @@ from app import app
 from config import MONGO_URI, client
 from flask import jsonify, session, request
 from datetime import datetime
+from gameConfig import GAME_CH_NAME_DICT
 
 # 連進MongoDB
 db = client['cgu_db']
@@ -179,9 +180,16 @@ def get_data_game():
     doc = collect.find({}, {'_id': False})
     doc_list = list(doc)
 
+    # 處理成中文遊戲名稱
+    result_list = []
+    for item in doc_list:
+        for record in item['records']:
+            record['gameNameCH'] = GAME_CH_NAME_DICT[record['gameNameEN']]
+        result_list.append(item)
+
     resp = {
         'status': '200',
-        'result': doc_list,
+        'result': result_list,
         'msg': '取得遊戲紀錄資料成功'
     }
     return jsonify(resp)
@@ -245,5 +253,41 @@ def get_data_questionnaires():
         'status': '200',
         'result': result_list,
         'msg': '取得問卷資料成功'
+    }
+    return jsonify(resp)
+
+
+@app.route('/api/data/giftExchange', methods=['GET'])
+def get_data_giftExchange():
+    '''取得禮品兌換資料
+    Params:
+        None
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': [{account, name, giftName, date, isGive}]
+            'msg': ''
+        }
+    '''
+
+    collect = db['gift_exchange']
+    doc = collect.find({}, {'_id': False})
+    doc_list = list(doc)
+
+    result_list = []
+    for item in doc_list:
+        obj = {
+            'account': item['userAccount'],
+            'name': item['userName'],
+            'giftName': item['giftName'],
+            'date': item['date'],
+            'isGive': item['isGive']
+        }
+        result_list.append(obj)
+
+    resp = {
+        'status': '200',
+        'result': result_list,
+        'msg': '取得禮品兌換資料成功'
     }
     return jsonify(resp)

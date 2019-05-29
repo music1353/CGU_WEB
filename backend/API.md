@@ -167,7 +167,7 @@
 
   | API Method | API URL                       | Desc                            | Req Params                                       | Resp Result                                                  |
   | ---------- | ----------------------------- | ------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
-  | GET        | URL/user/getGames             | 取得當天可以練習的遊戲          |                                                  | [{gameNameCH, gameNameEN, imgURL, reviews, link}]            |
+  | GET        | URL/user/getGames             | 取得當天可以練習的遊戲          |                                                  | [{gameNameCH, gameNameEN, imgURL, level, link}]              |
   | GET        | URL/user/getLevel             | 取得所有遊戲的level             |                                                  | PrePet, BackPet, PreAnimal, BackAnimal, Teacher, Where, Ball |
   | POST       | URL/user/updateLevel          | 更新遊戲的level                 | gameNameEN, level                                |                                                              |
   | GET        | URL/user/getGameIsComplete    | 遊戲是否已完成                  | gameNameEN                                       | complete                                                     |
@@ -191,10 +191,12 @@
 
 * **parentAPI**：家長
 
-  | API Method | API URL                  | Desc             | Req Params                                          | Resp Result                                                  |
-  | ---------- | ------------------------ | ---------------- | --------------------------------------------------- | ------------------------------------------------------------ |
-  | GET        | URL/parent/checkDailyPSQ | 今天是否要做問卷 |                                                     | canDo(boolean), [如果已經做過問卷]=> focusValue, emotionValue, motivationValue, feedback |
-  | POST       | URL/parent/sendPSQ       | 每日問卷         | focusValue, emotionValue, motivationValue, feedback |                                                              |
+  | API Method | API URL                  | Desc                    | Req Params                                          | Resp Result                                                  |
+  | ---------- | ------------------------ | ----------------------- | --------------------------------------------------- | ------------------------------------------------------------ |
+  | GET        | URL/parent/checkDailyPSQ | 今天是否要做問卷        |                                                     | canDo(boolean), [如果已經做過問卷]=> focusValue, emotionValue, motivationValue, feedback |
+  | POST       | URL/parent/sendPSQ       | 每日問卷                | focusValue, emotionValue, motivationValue, feedback |                                                              |
+  | GET        | URL/parent/getChildGames | 取得當日孩子玩的遊戲    |                                                     | [{gameNameCH, gameNameEN, imgURL, level, link}]              |
+  | GET        | URL/parent/getChildLevel | 取得孩子所有遊戲的level |                                                     | PrePet, BackPet, PreAnimal, BackAnimal, Teacher, Where, Ball |
 
 * **tokenAPI**：獎勵點數
 
@@ -213,6 +215,7 @@
   | GET        | URL/data/admin          | 管理員資料   |            | [{name, account, pwd, authority}]                            |
   | GET        | URL/data/game           | 遊戲紀錄資料 |            | [{ account, records: [{date, gameNameEN, level, respTime, trueRate}] }] |
   | GET        | URL/data/questionnaires | 問卷資料     |            | [{ authority, account, name, parentAccount, parentName, questionnaires:[{date, focusValue, emotionValue, motivationValue, feedback}] }] |
+  | GET        | URL/data/giftExchange   | 禮品兌換資料 |            | [{account, name, giftName, date, isGive}]                    |
 
 * **giftAPI**：禮物
 

@@ -17,8 +17,8 @@ def user_get_games():
         None
     Returns:
         {
-            'status': '200'->登入成功; '404'->登入失敗
-            'result': [{gameNameCH, gameNameEN, imgURL, reviews, link}]
+            'status': '200'->成功; '404'->失敗
+            'result': [{gameNameCH, gameNameEN, imgURL, level, link}]
             'msg': ''
         }
     '''
@@ -44,7 +44,7 @@ def user_get_games():
                 'gameNameCH': GAME_CH_NAME_DICT[nameEN],
                 'gameNameEN': nameEN,
                 'imgURL': GAME_IMG_DICT[nameEN],
-                'reviews': LEVEL_CH_DICT[level_doc[nameEN]],
+                'level': LEVEL_CH_DICT[level_doc[nameEN]],
                 'link': 'game/'+nameEN+'_'+level_doc[nameEN]
             }
             games.append(obj)

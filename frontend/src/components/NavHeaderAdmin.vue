@@ -2,7 +2,8 @@
 <div>
   <v-navigation-drawer :clipped="clipped" v-model="drawer" enable-resize-watcher app dark class="lighten-3">
     <v-list>
-      <v-link-group v-for="item in items" :value="item.icon" :key="item.title">
+      <!-- v-link-group => div -->
+      <div v-for="item in items" :value="item.icon" :key="item.title">
         <v-list-tile :to="item.linkto" active-class="grey darken-4">
           <v-list-tile-action>
               <v-icon> {{item.icon}} </v-icon>
@@ -11,7 +12,7 @@
             <v-list-tile-title> {{item.title}}</v-list-tile-title>
           </v-list-tile-content> 
         </v-list-tile>
-      </v-link-group>
+      </div>
     </v-list>
   </v-navigation-drawer> 
   <v-toolbar fixed app :clipped-left="clipped" dark color="grey darken-3">
