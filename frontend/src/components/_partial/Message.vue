@@ -1,25 +1,25 @@
 <template>
 <div>
   <v-snackbar
-      v-model="msgFlag"
-      :bottom="y === 'bottom'"
-      :left="x === 'left'"
-      :multi-line="mode === 'multi-line'"
-      :right="x === 'right'"
-      :timeout="timeout"
-      :top="y === 'top'"
-      :vertical="mode === 'vertical'"
-      :color='color'
+    v-model="msgFlag"
+    :bottom="y === 'bottom'"
+    :left="x === 'left'"
+    :multi-line="mode === 'multi-line'"
+    :right="x === 'right'"
+    :timeout="timeout"
+    :top="y === 'top'"
+    :vertical="mode === 'vertical'"
+    :color='color'
+  >
+    {{ text }}
+    <v-btn
+      color="white"
+      flat
+      @click="closeFlag=false"
     >
-      {{ text }}
-      <v-btn
-        color="white"
-        flat
-        @click="closeFlag=false"
-      >
-        Close
-      </v-btn>
-    </v-snackbar>
+      Close
+    </v-btn>
+  </v-snackbar>
 </div>
 </template>
 

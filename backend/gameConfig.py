@@ -17,7 +17,7 @@ DB_GAMES_LIST = [
     ],
     [ # 第二種組合 BCF
         {
-            'gameNameEN': 'BackPet',
+            'gameNameEN': 'BackPet',
             'playTimes': '2',
             'complete': False
         }, {

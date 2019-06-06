@@ -161,6 +161,17 @@ export default {
           this.feedbackData = res.result;
         }
       });
+
+      // axios.get('/api/admin/getFeedback', {
+      //   params: {
+      //     date: date
+      //   }
+      // }).then((response) => {
+      //   let res = response.data;
+      //   if (res.status=='200') {
+      //     this.feedbackData = res.result;
+      //   }
+      // });
     }
   }
 }

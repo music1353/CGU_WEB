@@ -57,8 +57,8 @@ class drive:
         FOLDER_ID = folder.get('id') # 當下創建的folder id
 
         # 本地backup資料夾內的檔案
-        # mypath = os.path.join(BASE_DIR, "backup", nowTime)
-        mypath = os.path.join(BASE_DIR, "backup", "2019-04-24")
+        mypath = os.path.join(BASE_DIR, "backup", nowTime)
+        # mypath = os.path.join(BASE_DIR, "backup", "2019-04-24")
         files = listdir(mypath)
         for f in files:
             fullpath = os.path.join(mypath, f)
