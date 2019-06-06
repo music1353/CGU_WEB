@@ -14,6 +14,18 @@ def update_week():
         print('update week complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
 
 
+# 更新每日任務
+def init_mission():
+    db = client['cgu_db']
+    collect = db['users_mission']
+
+    try:
+        collect.update({}, {'$set': {'loginMission': False}})
+        print('init mission complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+    except:
+        print('init mission fail at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+
+
 
 # 更新每日訓練遊戲
 def init_users_daily_games():
