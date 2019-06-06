@@ -11,8 +11,8 @@ from app.modules.schedule_func import func
 
 def cloud_backup():
     # google drive 備份
-    drive = drive()
-    drive.backup()
+    googledrive = drive()
+    googledrive.backup()
 
 
 scheduler = BackgroundScheduler()
