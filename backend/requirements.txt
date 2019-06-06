@@ -5,3 +5,5 @@ gevent
 flask_pymongo
 APScheduler==3.6.0
 google_auth_oauthlib
+waitress
+pymongo==3.6.0
