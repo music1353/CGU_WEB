@@ -17,6 +17,6 @@
   src: url(/static/fonts/PingFang-SC.ttf);
 }
 
-html, body, h1, h2, h3, h4, h5, h6, button, input {
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微軟雅黑", Arial, sans-serif;
+html, body, div, p, span, h1, h2, h3, h4, h5, h6, button, input, .headline, .display-1, .display-2, .display-3, .title {
+  font-family: "PingFang SC", 'Noto Sans TC', sans-serif, "Hiragino Sans GB", "Microsoft YaHei", "微軟雅黑", Arial, sans-serif !important;
 }

@@ -11,5 +11,5 @@ export default {
 </script>
 
 <style>
-
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap');
 </style>
