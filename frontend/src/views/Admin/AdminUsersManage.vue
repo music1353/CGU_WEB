@@ -4,17 +4,14 @@
   <nav-header-admin></nav-header-admin>
   <v-content>
     <v-container fluid style="padding-bottom: 0;">
-      <v-layout>
-        <v-flex md3>
+      <v-layout wrap>
+        <v-flex md3 xs12>
           <v-select v-model="select" :items="items" label="Solo field" solo></v-select>
         </v-flex>
-        <v-flex md2 class="ml-3 pb-2">
+        <v-flex md5 xs12 class="ml-3 pb-2">
           <v-btn round color="#F57C00" class="white--text mt-2" @click="newOneDialog=true">新增使用者
             <v-icon right dark style="font-size: 15px;">fas fa-user-plus</v-icon>
           </v-btn>
-        </v-flex>
-        <!-- TODO: 批量新增 -->
-        <v-flex md2 class="pb-2">
           <v-tooltip bottom>
               <v-btn slot="activator" round color="green darken-2" class="white--text mt-2" @click="handlFileUpload">批量新增
                 <v-icon right dark style="font-size: 15px;">fas fa-file-csv</v-icon>
@@ -23,8 +20,17 @@
           </v-tooltip>
           <input type="file" id="csvUpload" ref="csvUpload" accept=".csv" @change="getUploadFile">
         </v-flex>
-         <message :parentFlag="csvFlag" :parentColor='csvColor' :parentText='csvMsg
-  '></message>
+        <!-- TODO: 批量新增 -->
+        <!-- <v-flex md2 class="pb-2">
+          <v-tooltip bottom>
+              <v-btn slot="activator" round color="green darken-2" class="white--text mt-2" @click="handlFileUpload">批量新增
+                <v-icon right dark style="font-size: 15px;">fas fa-file-csv</v-icon>
+              </v-btn>
+            <span>csv格式：身份 (test/comp), 姓名, 帳號, 密碼, 家長姓名, 家長帳號, 家長密碼, 聯絡電話</span>
+          </v-tooltip>
+          <input type="file" id="csvUpload" ref="csvUpload" accept=".csv" @change="getUploadFile">
+        </v-flex> -->
+        <message :parentFlag="csvFlag" :parentColor='csvColor' :parentText='csvMsg'></message>
         <!-- 批量新增 -->
       </v-layout>
     </v-container>

@@ -4,7 +4,7 @@
   <nav-header-user-game></nav-header-user-game>
   <v-content>
     <v-container fluid grid-list-md grid-list-sm>
-      <unity :src="sourceJson" width="1000" :unityLoader="sourceLoader" ref="myInstance"></unity>
+      <unity :src="sourceJson" :unityLoader="sourceLoader" ref="myInstance"></unity>
     </v-container>
   </v-content>
 </v-app>
