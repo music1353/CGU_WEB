@@ -20,7 +20,7 @@ def init_mission():
     collect = db['users_mission']
 
     try:
-        collect.update({}, {'$set': {'loginMission': False}})
+        collect.update({}, {'$set': {'loginMission': False, 'playMission': []}})
         print('init mission complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
     except:
         print('init mission fail at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
