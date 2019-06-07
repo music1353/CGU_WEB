@@ -270,7 +270,7 @@ def user_update_game_time():
                 users_games_level_collect.find_one_and_update({'account': session['account']}, {'$set': {gameNameEN: str(int(level)+1)}}, upsert=False)
             elif playTimes == '1': # 第二次玩, 下一次重疊level開始
                 users_games_level_collect.find_one_and_update({'account': session['account']}, {'$set': {gameNameEN: level}}, upsert=False)
-    elif int(trueRate) < 80: # 沒過80%降級, 動物農莊、寵物樂園playTimes-1, 其他playTimes歸0
+    elif float(trueRate) < 80: # 沒過80%降級, 動物農莊、寵物樂園playTimes-1, 其他playTimes歸0
         # 降級, 如果level是1就不降
         if nowLevel == '1':
             print('因為現在level是', nowLevel, '不降級')
