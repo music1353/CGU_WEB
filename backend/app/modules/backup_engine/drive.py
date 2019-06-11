@@ -9,9 +9,12 @@ from apiclient.http import MediaFileUpload
 from datetime import datetime
 import time
 from config import BASE_DIR, MODULE_DIR
+import logging
 
 class drive:
     def __init__(self):
+        logging.getLogger('googleapiclient.discovery_cache').setLevel(logging.ERROR)
+        
         SCOPES = ['https://www.googleapis.com/auth/drive']
 
         creds = None

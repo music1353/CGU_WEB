@@ -2,7 +2,7 @@ import time
 from datetime import datetime
 from gameConfig import DB_GAMES_LIST, TEST_GAME_LIST
 from config import client
-import os 
+import os
 
 # 更新週次, 如果是禮拜一, week+1
 def update_week(): 
@@ -20,10 +20,11 @@ def init_mission():
     collect = db['users_mission']
 
     try:
-        collect.update({}, {'$set': {'loginMission': False, 'playMission': []}})
+        collect.update_many({}, {'$set': {'loginMission': False, 'playMission': []}})
         print('init mission complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
-    except:
+    except Exception as err:
         print('init mission fail at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+        print(err)
 
 
 
@@ -79,7 +80,7 @@ def init_users_daily_games():
             else: # 禮拜二、五要練習
                 games = DB_GAMES_LIST[count%5]
                 doc['games'] = games
-                comp_users_game_count_collect.find_one_and_update({'_id': '0'}, {'$set': {'count': count+1}})
+                comp_users_game_count_collect.find_one_and_update({'_id': '0'}, {'$inc': {'count': 1}})
 
             users_daily_games_collect.insert_one(doc)
             print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
