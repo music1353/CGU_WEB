@@ -13,9 +13,9 @@
             <v-icon right dark style="font-size: 15px;">fas fa-user-plus</v-icon>
           </v-btn>
           <v-tooltip bottom>
-              <v-btn slot="activator" round color="green darken-2" class="white--text mt-2" @click="handlFileUpload">批量新增
-                <v-icon right dark style="font-size: 15px;">fas fa-file-csv</v-icon>
-              </v-btn>
+            <v-btn slot="activator" round color="green darken-2" class="white--text mt-2" @click="handlFileUpload">批量新增
+              <v-icon right dark style="font-size: 15px;">fas fa-file-csv</v-icon>
+            </v-btn>
             <span>csv格式：身份 (test/comp), 姓名, 帳號, 密碼, 家長姓名, 家長帳號, 家長密碼, 聯絡電話</span>
           </v-tooltip>
           <input type="file" id="csvUpload" ref="csvUpload" accept=".csv" @change="getUploadFile">
@@ -357,6 +357,7 @@ export default {
     // TODO: 測試中
     handlFileUpload() {
       let uploadbtn = this.$refs.csvUpload;
+      uploadbtn.setAttribute('type', 'file'); // 解決uploadbtn第二次上傳檔案失效問題
       csvUpload.click();
     },
     getUploadFile() {
@@ -370,6 +371,8 @@ export default {
         complete(results) {
           // 檢測csv是否符合格式
           let keys = Object.keys(results.data[0]);
+          console.log(keys);
+          console.log(results.data);
           if (keys.sort().toString() == ["身份", "姓名", "帳號", "密碼", "家長姓名", "家長帳號", "家長密碼", "聯絡電話"].sort().toString()) {
             console.log('符合格式');
             axios.post('/api/admin/addCsvUser', {
@@ -401,6 +404,8 @@ export default {
           console.log('上傳失敗: ' + reason);
         }
       });
+
+      uploadbtn.setAttribute('type', 'text'); // 解決uploadbtn第二次上傳檔案失效問題
     }
   }
 }
