@@ -5,9 +5,6 @@ from flask import jsonify, session, request
 # 連進MongoDB
 db = client['cgu_db']
 
-# 設置密鑰
-# app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
 @app.route('/api/login', methods=['POST'])
 def login():
     '''網頁端登入, 使用SESSION記錄登入

@@ -6,6 +6,5 @@ app = Flask(__name__)
 app.config.from_object('config.Config')
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 coloredlogs.install(level='DEBUG')
-# CORS(app, resources=r'/*')
 
 from app.views import baseAPI, userAPI, adminAPI, parentAPI, tokenAPI, dataAPI, giftAPI, rankAPI

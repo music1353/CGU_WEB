@@ -8,9 +8,6 @@ import pprint
 # 連進MongoDB
 db = client['cgu_db']
 
-# 設置密鑰
-# app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
 @app.route('/api/admin/getAllUsers', methods=['GET'])
 def admin_get_all_users():
     '''取得所有使用者的資料

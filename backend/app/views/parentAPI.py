@@ -7,9 +7,6 @@ from gameConfig import GAME_CH_NAME_DICT, GAME_IMG_DICT, LEVEL_CH_DICT
 # 連進MongoDB
 db = client['cgu_db']
 
-# 設置密鑰
-# app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
-
 @app.route('/api/parent/checkDailyPSQ', methods=['GET'])
 def parent_check_daily_PSQ():
     '''家長今日是否需要做問卷
