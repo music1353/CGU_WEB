@@ -6,7 +6,7 @@ A website for training ADHD children based on Vue and Flask
 
 Training game is based on Unity
 
-[![Vue](https://img.shields.io/badge/vue-2.5.2-blue.svg)](https://github.com/vuejs/vue)![vuetify](https://img.shields.io/badge/vuetify-1.3.8-blue.svg) ![flask](https://img.shields.io/badge/flask-1.0.3-blue.svg)
+[![Vue](https://img.shields.io/badge/vue-2.5.2-blue.svg)](https://github.com/vuejs/vue) ![vuetify](https://img.shields.io/badge/vuetify-1.3.8-blue.svg) ![flask](https://img.shields.io/badge/flask-1.0.3-blue.svg)
 
 
 
