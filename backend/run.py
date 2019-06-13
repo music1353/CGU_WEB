@@ -1,35 +1,52 @@
-# -*- coding: UTF-8 -*-
-
-# from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.jobstores.mongodb import MongoDBJobStore
+from apscheduler.executors.pool import ThreadPoolExecutor, ProcessPoolExecutor
 import atexit
 from app import app
 from app.modules.backup_engine.drive import drive
 from app.modules.schedule_func import func
-
-from flask_apscheduler import APScheduler
+import pymongo
+from config import client
 
 def cloud_backup():
     # google drive 備份
     googledrive = drive()
     googledrive.backup()
 
-scheduler = APScheduler()
-scheduler.init_app(app)
-scheduler.start()
-app.apscheduler.add_job(func=func.local_backup, id="local_backup", trigger="cron", hour=16, minute=52, second=1)
-app.apscheduler.add_job(func=func.update_week, id="update_week", trigger="cron", hour=16, minute=56, second=1)
-print(app.apscheduler.get_jobs())
 
-# scheduler = BackgroundScheduler()
-# scheduler.add_job(func=func.local_backup, trigger="cron", hour=12, minute=58, second=1)
-# scheduler.add_job(func=cloud_backup, trigger="cron", hour=12, minute=59, second=30)
-# scheduler.add_job(func=func.update_week, trigger="cron", hour=0, minute=0, second=1)
-# scheduler.add_job(func=func.init_mission, trigger="cron", hour=0, minute=0, second=2)
-# scheduler.add_job(func=func.init_users_daily_games, trigger="cron", hour=0, minute=0, second=3)
-# scheduler.start()
+jobstores = {
+    'mongo': MongoDBJobStore(client=client),
+}
+executors = {
+    'default': ThreadPoolExecutor(30),
+    'processpool': ProcessPoolExecutor(30)
+}
+
+scheduler = BackgroundScheduler(misfire_grace_time=300, jobstores=jobstores, executors=executors)
+
+scheduler.add_job(func=func.local_backup, id="local_backup", trigger="cron", hour=23, minute=57, second=1, jobstore='mongo')
+scheduler.add_job(func=cloud_backup, id="cloud_backup", trigger="cron", hour=23, minute=59, second=30, jobstore='mongo')
+scheduler.add_job(func=func.update_week, id="update_week", trigger="cron", hour=0, minute=0, second=1, jobstore='mongo')
+scheduler.add_job(func=func.init_mission, id="init_mission", trigger="cron", hour=0, minute=0, second=2, jobstore='mongo')
+scheduler.add_job(func=func.init_users_daily_games, id="init_users_daily_games" ,trigger="cron", hour=0, minute=0, second=3, jobstore='mongo')
+
+# scheduler.add_job(func=func.local_backup, id="local_backup", trigger="cron", hour=1, minute=7, second=1, jobstore='mongo')
+# scheduler.add_job(func=cloud_backup, id="cloud_backup", trigger="cron", hour=0, minute=59, second=2, jobstore='mongo')
+# scheduler.add_job(func=func.update_week, id="update_week", trigger="cron", hour=0, minute=59 , second=3, jobstore='mongo')
+# scheduler.add_job(func=func.init_mission, id="init_mission", trigger="cron", hour=0, minute=59, second=4, jobstore='mongo')
+# scheduler.add_job(func=func.init_users_daily_games, id="init_users_daily_games", trigger="cron", hour=0, minute=59, second=5, jobstore='mongo')
+
+def check_scheduler_alive():
+    print('keep alive...APScheduler...zz')
+    
+
+scheduler.add_job(func=check_scheduler_alive, id="check_scheduler_alive", trigger="cron", minute=50, jobstore='mongo')
+
+print(scheduler.get_jobs())
+scheduler.start()
 
 # Shut down the scheduler when exiting the app
-# atexit.register(lambda: scheduler.shutdown())
+atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
     app.run(use_reloader=False)

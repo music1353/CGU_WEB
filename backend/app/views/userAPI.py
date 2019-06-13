@@ -8,7 +8,7 @@ from gameConfig import GAME_CH_NAME_DICT, GAME_IMG_DICT, LEVEL_CH_DICT
 db = client['cgu_db']
 
 # 設置密鑰
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+# app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 @app.route('/api/user/getGames', methods=['GET'])
 def user_get_games():

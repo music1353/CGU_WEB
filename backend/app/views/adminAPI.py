@@ -9,7 +9,7 @@ import pprint
 db = client['cgu_db']
 
 # 設置密鑰
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+# app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 @app.route('/api/admin/getAllUsers', methods=['GET'])
 def admin_get_all_users():
@@ -504,13 +504,6 @@ def admin_add_csv_user():
                     'questionnaires': []
                 }
                 parent_collect.insert_one(parent_obj)
-
-                resp = {
-                    'status': '200',
-                    'result': '',
-                    'msg': '新增使用者成功！'
-                }
-                return jsonify(resp)
             else:
                 resp = {
                     'status': '404',
@@ -518,6 +511,14 @@ def admin_add_csv_user():
                     'msg': '身份格式有誤！'
                 }
                 return jsonify(resp)
+
+        # 190611: 解決只會新增一個用戶的問題
+        resp = {
+            'status': '200',
+            'result': '',
+            'msg': '新增使用者成功！'
+        }
+        return jsonify(resp)
 
 
 

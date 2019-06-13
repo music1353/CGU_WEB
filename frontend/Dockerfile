@@ -19,8 +19,9 @@ EXPOSE 80
 # 2. run build
 # 3. 將dist的文件都複製到nginx的目錄下
 # 4. 刪除工作目錄的文件，尤其是node_modules縮小鏡像體積
+#&& cp -r games/* /var/www/html/static \
 RUN rm -rf node_modules \
-    && yarn install --no-bin-links \
+    && yarn install --no-bin-links --network-timeout 1000000 \
     && yarn run build \
     && cp -r dist/* /var/www/html \
     && cp -r nginx_conf/* /etc/nginx \

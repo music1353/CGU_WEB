@@ -136,9 +136,29 @@ def local_backup():
         'name': 'users_games_records',
         'cmd': 'mongoexport --db cgu_db --collection users_games_records --out ./backup/'+nowTime+'/users_games_records.json'
     }
+
+    users_mission_cmd = {
+        'name': 'users_mission',
+        'cmd': 'mongoexport --db cgu_db --collection users_mission --out ./backup/'+nowTime+'/users_mission.json'
+    }
+
+    gifts_cmd = {
+        'name': 'gifts',
+        'cmd': 'mongoexport --db cgu_db --collection gifts --out ./backup/'+nowTime+'/gifts.json'
+    }
+
+    gift_exchange_cmd = {
+        'name': 'gift_exchange',
+        'cmd': 'mongoexport --db cgu_db --collection gift_exchange --out ./backup/'+nowTime+'/gift_exchange.json'
+    }
+
+    week_count_cmd = {
+        'name': 'week_count',
+        'cmd': 'mongoexport --db cgu_db --collection week_count --out ./backup/'+nowTime+'/week_count.json'
+    }
     
     # 執行備份
-    cmd_list = [users_cmd, admins_cmd, parents_cmd, comp_users_game_count_cmd, users_daily_games_cmd, users_games_level_cmd, users_games_records_cmd]
+    cmd_list = [users_cmd, admins_cmd, parents_cmd, comp_users_game_count_cmd, users_daily_games_cmd, users_games_level_cmd, users_games_records_cmd, users_mission_cmd, gifts_cmd, gift_exchange_cmd, week_count_cmd]
     for cmd in cmd_list:
         try:
             os.system(cmd['cmd'])

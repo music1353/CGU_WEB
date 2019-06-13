@@ -8,5 +8,4 @@ google_auth_oauthlib
 google-api-python-client
 waitress
 pymongo==3.6.0
-coloredlogs
-logging
+colorama

@@ -372,7 +372,6 @@ export default {
           // 檢測csv是否符合格式
           let keys = Object.keys(results.data[0]);
           console.log(keys);
-          console.log(results.data);
           if (keys.sort().toString() == ["身份", "姓名", "帳號", "密碼", "家長姓名", "家長帳號", "家長密碼", "聯絡電話"].sort().toString()) {
             console.log('符合格式');
             axios.post('/api/admin/addCsvUser', {
