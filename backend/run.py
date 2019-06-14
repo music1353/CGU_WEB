@@ -40,13 +40,13 @@ def check_scheduler_alive():
     print('keep alive...APScheduler...zz')
     
 
-scheduler.add_job(func=check_scheduler_alive, id="check_scheduler_alive", trigger="cron", minute=50, jobstore='mongo')
+# scheduler.add_job(func=check_scheduler_alive, id="check_scheduler_alive", trigger="cron", minute=50, jobstore='mongo')
 
 print(scheduler.get_jobs())
-scheduler.start()
+# scheduler.start()
 
 # Shut down the scheduler when exiting the app
-atexit.register(lambda: scheduler.shutdown())
+# atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
     app.run(use_reloader=False)

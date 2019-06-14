@@ -21,32 +21,26 @@ def user_get_games():
     '''
 
     games_collect = db['users_daily_games']
-    games_doc = games_collect.find({'account': session['account']}, {'_id': False})
+    games_doc = games_collect.find_one({'account': session['account']}, {'_id': False})
 
     level_collect = db['users_games_level']
     level_doc = level_collect.find_one({'account': session['account']}, {'_id': False})
 
     games = []
-    games_doc_list = list(games_doc)
-    
-    if games_doc_list[0]['games'] != []: # 今日有可玩的遊戲
-        # 取得gameNameEN
-        temp = []
-        for item in games_doc_list[0]['games']:
-            temp.append(item['gameNameEN'])
-
-        # 加上中文名字跟imgUrl
-        for nameEN in temp:
+    if games_doc['games'] != []: # 今日有可玩的遊戲
+        for game in games_doc['games']:
+            nameEN = game['gameNameEN']
             obj = {
                 'gameNameCH': GAME_CH_NAME_DICT[nameEN],
                 'gameNameEN': nameEN,
                 'imgURL': GAME_IMG_DICT[nameEN],
                 'level': LEVEL_CH_DICT[level_doc[nameEN]],
-                'link': 'game/'+nameEN+'_'+level_doc[nameEN]
+                'link': 'game/'+nameEN+'_'+level_doc[nameEN],
+                'complete': game['complete']
             }
             games.append(obj)
     else: # 今日沒有可玩的遊戲
-        print('今日沒有可玩的遊戲')
+        print('今日沒有可玩的遊戲 -- from user/getGames')
 
     # 用msg表達今天有無遊戲要玩
     resp = {}
@@ -78,12 +72,8 @@ def user_get_level():
         }
     '''
 
-    # authority = session['authority']
-    # gameNameCH = request.json['gameNameCH']
-
     collect = db['users_games_level']
     users_games_level_doc = collect.find_one({'account': session['account']}, {'_id': False})
-    # print(users_games_level_doc)
 
     resp = {
         'status': '200',
@@ -91,42 +81,6 @@ def user_get_level():
         'msg': '遊戲請求成功'
     }
     return jsonify(resp)
-
-
-# TODO: 廢棄中...QQ
-@app.route('/api/user/updateLevel', methods=['POST'])
-def user_update_level():
-    '''更新遊戲的level
-    Params:
-        gameNameEN, level
-    Returns:
-        {
-            'status': '200'->成功; '404'->失敗
-            'result': ''
-            'msg': ''
-        }
-    '''
-
-    gameNameEN = request.json['gameNameEN']
-    level = request.json['level']
-
-    try:
-        collect = db['users_games_level']
-        collect.find_one_and_update({'account': session['account']}, {'$set': {gameNameEN: level}}, upsert=False)
-
-        resp = {
-            'status': '200',
-            'result': '',
-            'msg': session['account']+'更新level成功'
-        }
-        return jsonify(resp)
-    except Exception as err:
-        resp = {
-            'status': '404',
-            'result': str(err),
-            'msg': '更新level錯誤'
-        }
-        return jsonify(resp)
 
 
 @app.route('/api/user/getGameIsComplete', methods=['GET'])
@@ -156,37 +110,6 @@ def user_get_is_complete():
         'status': '200',
         'result': {'complete': flag},
         'msg': gameNameEN+'取得遊戲是否已完成成功'
-    }
-    return jsonify(resp)
-
-
-@app.route('/api/user/getAllGameIsComplete', methods=['GET'])
-def user_get_all_game_is_complete():
-    '''今天所有遊戲是否完成
-    Params:
-        None
-    Returns:
-        {
-            'status': '200'->成功; '404'->失敗
-            'result': complete
-            'msg': ''
-        }
-    '''
-
-    collect = db['users_daily_games']
-    doc = collect.find_one({'account': session['account']}, {'_id': False})
-    games = doc['games']
-
-    obj = {
-        'complete': doc['complete'],
-    }
-    for game in games:
-        obj[game['gameNameEN']] = game['complete']
-
-    resp = {
-        'status': '200',
-        'result': obj,
-        'msg': '取得今天所有遊戲是否完成成功'
     }
     return jsonify(resp)
 

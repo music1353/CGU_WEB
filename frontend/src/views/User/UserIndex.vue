@@ -100,21 +100,6 @@ export default {
         this.doFlag = res.msg;
         if (res.status == '200') {
           this.gamesCards = res.result;
-          // console.log(this.gamesCards);
-          this.getAllGameIsComplete();
-        }
-      });
-    },
-    getAllGameIsComplete() {
-      axios.get('/api/user/getAllGameIsComplete').then((response) => {
-        let res = response.data;
-        if (res.status == '200') {
-          this.todayIsComplete = res.result.complete;
-          
-          // 把每個遊戲的complete狀態加進card
-          this.gamesCards.forEach((element) => {
-            element['complete'] = res.result[element.gameNameEN];
-          });
         }
       });
     },

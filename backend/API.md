@@ -166,21 +166,19 @@
 
 * **userAPI**：測試者
 
-  | API Method | API URL                       | Desc                            | Req Params                                       | Resp Result                                                  |
-  | ---------- | ----------------------------- | ------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
-  | GET        | URL/user/getGames             | 取得當天可以練習的遊戲          |                                                  | [{gameNameCH, gameNameEN, imgURL, level, link}]              |
-  | GET        | URL/user/getLevel             | 取得所有遊戲的level             |                                                  | PrePet, BackPet, PreAnimal, BackAnimal, Teacher, Where, Ball |
-  | POST       | URL/user/updateLevel          | 更新遊戲的level                 | gameNameEN, level                                |                                                              |
-  | GET        | URL/user/getGameIsComplete    | 遊戲是否已完成                  | gameNameEN                                       | complete                                                     |
-  | GET        | URL/user/getAllGameIsComplete | 今天所有遊戲是否完成            |                                                  | {complete, gameNameEN:是否完成}                              |
-  | POST       | URL/user/updateTimesAndLevel  | 更新每日遊戲可以玩的次數和level | gameNameEN                                       |                                                              |
-  | POST       | URL/user/saveGameRecords      | 存遊玩紀錄                      | gameNameEN, level, respTime, trueRate, trueCount |                                                              |
-
+  | API Method | API URL                      | Desc                            | Req Params                                       | Resp Result                                                  |
+  | ---------- | ---------------------------- | ------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
+  | GET        | URL/user/getGames            | 取得當天可以練習的遊戲          |                                                  | [{gameNameCH, gameNameEN, imgURL, level, link, complete}]    |
+  | GET        | URL/user/getLevel            | 取得所有遊戲的level             |                                                  | PrePet, BackPet, PreAnimal, BackAnimal, Teacher, Where, Ball |
+  | POST       | URL/user/updateLevel         | 更新遊戲的level                 | gameNameEN, level                                |                                                              |
+  | GET        | URL/user/getGameIsComplete   | 遊戲是否已完成                  | gameNameEN                                       | complete                                                     |
+  | POST       | URL/user/updateTimesAndLevel | 更新每日遊戲可以玩的次數和level | gameNameEN                                       |                                                              |
+  | POST       | URL/user/saveGameRecords     | 存遊玩紀錄                      | gameNameEN, level, respTime, trueRate, trueCount |                                                              |
+  
 * **adminAPI**：管理員
 
   | API Method | API URL                     | Desc                                        | Req Params                                                   | Resp Result                                                  |
   | ---------- | --------------------------- | ------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
-  | GET        | URL/admin/getAllUsers*      | 取得所有使用者的資料                        |                                                              |                                                              |
   | GET        | URL/admin/getUsers          | 取得所有使用者結合家長的資料                |                                                              | [name, account, parentName, parentAccount, authority, phone] |
   | GET        | URL/admin/getTestUsers      | 取得實驗組使用者的資料                      |                                                              | account, name, phone                                         |
   | GET        | URL/admin/getCompUsers      | 取得對照組使用者的資料                      |                                                              | account, name, phone                                         |
@@ -189,7 +187,7 @@
   | POST       | URL/admin/addOneUser        | 增加一位使用者(user綁parent)                | authority, account, pwd, name, Pauthority(家長權限), Paccount(家長帳號), Ppwd(家長密碼), Pname(家長姓名), phone |                                                              |
   | POST       | URL/admin/delOneUser        | 刪除一位使用者(user綁parent)                | account, Paccount(家長帳號)                                  |                                                              |
   | POST       | URL/admin/addCsvUser        | 批次增加使用者                              | [{身份, 姓名, 帳號, 密碼, 家長姓名, 家長帳號, 家長密碼, 聯絡電話}] |                                                              |
-
+  
 * **parentAPI**：家長
 
   | API Method | API URL                  | Desc                    | Req Params                                          | Resp Result                                                  |
