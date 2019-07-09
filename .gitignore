@@ -5,3 +5,5 @@ auth/
 test.py
 .icloud
 games/
+logs/
+.DS_Store

@@ -200,7 +200,6 @@ def forget_password():
 
     name = request.args.get("name")
     account = request.args.get("account")
-
     
     user_collect = db['users']
     user_doc = user_collect.find_one({'account': account}, {'_id': False})
@@ -219,6 +218,8 @@ def forget_password():
         authority = 'admin'
     elif parent_doc:
         authority = 'parent'
+    
+    print(authority)
 
     if authority == '': # 資料庫無此帳號
         resp = {

@@ -13,6 +13,9 @@ def cloud_backup():
     googledrive = drive()
     googledrive.backup()
 
+def check_scheduler_alive():
+    print('keep alive...APScheduler...zz')
+
 
 jobstores = {
     'mongo': MongoDBJobStore(client=client),
@@ -24,20 +27,26 @@ executors = {
 
 scheduler = BackgroundScheduler(misfire_grace_time=300, jobstores=jobstores, executors=executors)
 
+# 設置logging
+# logging.basicConfig(format='%(asctime)s - %(levelname)s : %(message)s', filename='apscheduler.log')
+# logging.getLogger('apscheduler').setLevel(logging.DEBUG)
+
 scheduler.add_job(func=func.local_backup, id="local_backup", trigger="cron", hour=23, minute=57, second=1, jobstore='mongo')
 scheduler.add_job(func=cloud_backup, id="cloud_backup", trigger="cron", hour=23, minute=59, second=30, jobstore='mongo')
 scheduler.add_job(func=func.update_week, id="update_week", trigger="cron", hour=0, minute=0, second=1, jobstore='mongo')
 scheduler.add_job(func=func.init_mission, id="init_mission", trigger="cron", hour=0, minute=0, second=2, jobstore='mongo')
 scheduler.add_job(func=func.init_users_daily_games, id="init_users_daily_games" ,trigger="cron", hour=0, minute=0, second=3, jobstore='mongo')
+scheduler.add_job(func=check_scheduler_alive, id="check_scheduler_alive_minute", trigger="cron", minute=50, jobstore='mongo')
+scheduler.add_job(func=check_scheduler_alive, id="check_scheduler_alive_second", trigger="cron", second=30, jobstore='mongo')
+
+
+
 
 # scheduler.add_job(func=func.local_backup, id="local_backup", trigger="cron", hour=1, minute=7, second=1, jobstore='mongo')
 # scheduler.add_job(func=cloud_backup, id="cloud_backup", trigger="cron", hour=0, minute=59, second=2, jobstore='mongo')
 # scheduler.add_job(func=func.update_week, id="update_week", trigger="cron", hour=0, minute=59 , second=3, jobstore='mongo')
 # scheduler.add_job(func=func.init_mission, id="init_mission", trigger="cron", hour=0, minute=59, second=4, jobstore='mongo')
 # scheduler.add_job(func=func.init_users_daily_games, id="init_users_daily_games", trigger="cron", hour=0, minute=59, second=5, jobstore='mongo')
-
-def check_scheduler_alive():
-    print('keep alive...APScheduler...zz')
     
 
 # scheduler.add_job(func=check_scheduler_alive, id="check_scheduler_alive", trigger="cron", minute=50, jobstore='mongo')

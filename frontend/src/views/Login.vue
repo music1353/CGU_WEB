@@ -208,8 +208,8 @@ export default {
     submit() {
       axios.get('/api/forgetPwd', {
         params: {
-          'name': this.checkName,
-          'account': this.checkAccount
+          name: this.checkName,
+          account: this.checkAccount
         }
       }).then((response) => {
         let res = response.data;

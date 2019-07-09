@@ -4,6 +4,10 @@ from gameConfig import DB_GAMES_LIST, TEST_GAME_LIST
 from config import client
 import os
 
+# 確認APScheduler還活著
+def check_scheduler_alive():
+    print('keep alive...APScheduler...zz')
+
 # 更新週次, 如果是禮拜一, week+1
 def update_week(): 
     db = client['cgu_db']
