@@ -486,6 +486,7 @@ def admin_add_csv_user():
                 users_mission_obj = {
                     'account': account,
                     'loginMission': False,
+                    'allCompleteMission': False,
                     'playMission': []
                 }
                 users_mission_collect.insert_one(users_mission_obj)

@@ -79,6 +79,7 @@
   ~~~json
   account: "", // 使用者帳號
   loginMission: "", // [Boolean] 每日登入任務, 每日刷新,
+  allCompleteMission: "", // [Boolean] 完成所有的game
   playMission: [] // [Array] 紀錄今天完成的gameNameEN
   ~~~
 

@@ -62,8 +62,13 @@ def gift_exchange():
 
     # 取得最後一條exchangeId
     gift_exchange_collect = db['gift_exchange']
-    new_gift_doc = gift_exchange_collect.find().sort([('exchangeId', -1)]).limit(1)
-    lastId = list(new_gift_doc)[0]['exchangeId']
+    gift_exchange_doc = gift_exchange_collect.find()
+    lastId = 0
+    if list(gift_exchange_doc) == []:
+        lastId = 0
+    else:
+        new_gift_doc = gift_exchange_collect.find().sort([('exchangeId', -1)]).limit(1)
+        lastId = list(new_gift_doc)[0]['exchangeId']
 
     # 加入exchange紀錄
     gift_exchange_collect = db['gift_exchange']

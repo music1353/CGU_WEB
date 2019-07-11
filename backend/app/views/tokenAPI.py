@@ -119,8 +119,9 @@ def token_play_mission():
                     'msg': '完成遊戲任務'
                 }
 
-        if games_doc['complete'] == True: # 如果全部遊戲都玩完, +20
+        if games_doc['complete']==True and mission_doc['allCompleteMission']==False: # 如果全部遊戲都玩完且還沒有完成allComplete的任務, +20
             user_collect.find_one_and_update({'account': session['account']}, {'$inc': {'token': 20}})
+            mission_collect.find_one_and_update({'account': session['account']}, {'$set': {'allCompleteMission': True}})
         
         return jsonify(resp)
     else:
