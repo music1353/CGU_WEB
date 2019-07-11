@@ -100,6 +100,15 @@ export default {
         this.doFlag = res.msg;
         if (res.status == '200') {
           this.gamesCards = res.result;
+
+          // 檢查今天的遊戲是否都已完成
+          let completeFlag  = true;
+          res.result.forEach((item) => {
+            if (item.complete == false) {
+              completeFlag = false;
+            }
+          });
+          this.todayIsComplete = completeFlag;
         }
       });
     },
