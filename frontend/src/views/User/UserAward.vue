@@ -23,7 +23,7 @@
                 </v-flex>
                 <v-flex md2>
                   <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userTest'&&tokenNum>=item.needToken" @click="exchange(item.name)">兌換</a>
-                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userComp'&&tokenNum>(item.needToken*2/5)" @click="exchange(item.name)">兌換</a>
+                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userComp'&&tokenNum>=(item.needToken*2/5)" @click="exchange(item.name)">兌換</a>
                 </v-flex>
               </v-layout>
             </v-card-actions class="mt-4 mb-4 mr-2 ml-2">
