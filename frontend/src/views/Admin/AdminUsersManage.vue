@@ -145,6 +145,7 @@
 <script>
 import axios from 'axios'
 import Papa from 'papaparse'
+
 import NavHeaderAdmin from '@/components/NavHeaderAdmin'
 import Message from "@/components/_partial/Message.vue"
 
@@ -363,6 +364,7 @@ export default {
     getUploadFile() {
       let uploadbtn = this.$refs.csvUpload;
       this.csvFile = this.$refs.csvUpload.files[0];
+      console.log(this.csvFile);
       this.csvFlag = false;
 
       let self = this;
