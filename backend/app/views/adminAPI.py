@@ -173,6 +173,7 @@ def admin_get_feedback():
         }
     ])
     doc_list = list(doc)
+    print(doc_list)
 
     result_list = []
     for item in doc_list:
@@ -245,6 +246,7 @@ def admin_add_one_user():
     users_daily_games_collect = db['users_daily_games']
     users_games_level_collect = db['users_games_level']
     users_games_records_collect = db['users_games_records']
+    users_complete_records_collect = db['users_complete_records']
     users_mission_collect = db['users_mission']
     parent_collect = db['parents']
 
@@ -305,11 +307,23 @@ def admin_add_one_user():
         }
         users_games_records_collect.insert_one(users_games_records_obj)
 
+        # TODO: 新增 users_complete_records
+        users_compete_records_obj = {
+            'account': account,
+            'name': name,
+            'authority': authority,
+            'records': []
+        }
+        users_complete_records_collect.insert_one(users_compete_records_obj)
+
+
         # 新增 users_mission
         users_mission_obj = {
             'account': account,
+            'allCompleteMission': False,
             'loginMission': False,
-            'playMission': []
+            'playMission': [],
+            'levelUpTimesMission': 0
         }
         users_mission_collect.insert_one(users_mission_obj)
 
@@ -353,6 +367,7 @@ def admin_del_one_user():
     users_daily_games_collect = db['users_daily_games']
     users_games_level_collect = db['users_games_level']
     users_games_records_collect = db['users_games_records']
+    users_complete_records_collect = db['users_complete_records']
     users_mission_collect = db['users_mission']
     parent_collect = db['parents']
 
@@ -361,6 +376,7 @@ def admin_del_one_user():
         users_daily_games_collect.delete_one({'account': account})
         users_games_level_collect.delete_one({'account': account})
         users_games_records_collect.delete_one({'account': account})
+        users_complete_records_collect.delete_one({'account': account})
         users_mission_collect.delete_one({'account': account})
         parent_collect.delete_one({'account': Paccount})
 
@@ -400,6 +416,7 @@ def admin_add_csv_user():
     users_daily_games_collect = db['users_daily_games']
     users_games_level_collect = db['users_games_level']
     users_games_records_collect = db['users_games_records']
+    users_complete_records_collect = db['users_complete_records']
     users_mission_collect = db['users_mission']
     parent_collect = db['parents']
 
@@ -482,9 +499,19 @@ def admin_add_csv_user():
                 }
                 users_games_records_collect.insert_one(users_games_records_obj)
 
+                # TODO: 新增 users_complete_records
+                users_compete_records_obj = {
+                    'account': account,
+                    'name': name,
+                    'authority': authority,
+                    'records': []
+                }
+                users_complete_records_collect.insert_one(users_compete_records_obj)
+
                 # 新增 users_mission
                 users_mission_obj = {
                     'account': account,
+                    'allCompleteMission': False,
                     'loginMission': False,
                     'allCompleteMission': False,
                     'playMission': []
@@ -519,7 +546,62 @@ def admin_add_csv_user():
         return jsonify(resp)
 
 
+# TODO: 
+@app.route('/api/admin/doneMissionUser', methods=['GET'])
+def get_done_mission_user():
+    '''取得各週完成登入任務及全部完成任務的名單
+    Params:
+        week
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': userList:[]
+            'msg': ''
+        }
+    '''
 
+    week = request.args.get('week')
+
+    users_complete_records_collect = db['users_complete_records']
+    doc = users_complete_records_collect.find({})
+
+    userTestList = []
+    userCompList = []
+    for user in list(doc):
+        flag = True
+        if user['records'] != []:
+            for record in user['records']:
+                if int(record['week']) == int(week):
+                    if record['loginMission']==False or record['allCompleteMission']==False:
+                        flag = False
+                else:
+                    flag = False
+        else:
+            flag = False
         
+        # 如果week & loginMission & allCompleteMission 都符合
+        if flag:
+            if user['authority'] == 'userTest':
+                obj = {
+                    'account': user['account'],
+                    'name': user['name']
+                }
+                userTestList.append(obj)
+            elif user['authority'] == 'userComp':
+                obj = {
+                    'account': user['account'],
+                    'name': user['name']
+                }
+                userCompList.append(obj)
 
-    
+    resultObj = {
+        'userTestList': userTestList,
+        'userCompList': userCompList
+    }
+
+    resp = {
+        'status': '200',
+        'result': resultObj,
+        'msg': '取得各週完成登入任務及全部完成任務的名單成功！'
+    }
+    return jsonify(resp)

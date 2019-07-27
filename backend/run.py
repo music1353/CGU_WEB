@@ -58,5 +58,5 @@ print(scheduler.get_jobs())
 # atexit.register(lambda: scheduler.shutdown())
 
 if __name__ == '__main__':
-    app.run(use_reloader=False)
-    # app.run(debug=True) # 會執行兩次
+    # app.run(use_reloader=False)
+    app.run(debug=True) # 會執行兩次

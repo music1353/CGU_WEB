@@ -3,7 +3,7 @@
 <v-app>
   <nav-header-user-game></nav-header-user-game>
   <v-content>
-    <v-container fluid grid-list-md grid-list-sm>
+    <v-container fluid >
       <unity :src="sourceJson" :unityLoader="sourceLoader" ref="myInstance"></unity>
     </v-container>
   </v-content>
@@ -36,9 +36,6 @@ export default {
     this.gameNameEN = this.$route.params.gameNameEN;
     this.sourceJson = '/static/'+ this.gameNameEN + '/Build/'+ this.gameNameEN +'.json';
     this.sourceLoader = '/static/'+ this.gameNameEN +'/Build/UnityLoader.js';
-  },
-  beforeCreate() {
-    
   },
   mounted() {
     this.checkLogin();

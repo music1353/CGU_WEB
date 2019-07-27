@@ -29,6 +29,8 @@ executors = {
 scheduler = BackgroundScheduler(misfire_grace_time=300, jobstores=jobstores, executors=executors)
 scheduler.add_listener(listener.aps_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR | EVENT_JOB_MISSED)
 
+# TODO: new
+scheduler.add_job(func=func.insert_users_complete_records, id="insert_users_complete_records", trigger="cron", hour=23, minute=56, second=1, jobstore='mongo')
 scheduler.add_job(func=func.local_backup, id="local_backup", trigger="cron", hour=23, minute=57, second=1, jobstore='mongo')
 scheduler.add_job(func=cloud_backup, id="cloud_backup", trigger="cron", hour=23, minute=59, second=30, jobstore='mongo')
 scheduler.add_job(func=func.update_week, id="update_week", trigger="cron", hour=0, minute=0, second=1, jobstore='mongo')

@@ -24,7 +24,7 @@ def init_mission():
     collect = db['users_mission']
 
     try:
-        collect.update_many({}, {'$set': {'loginMission': False, 'playMission': []}})
+        collect.update_many({}, {'$set': {'loginMission': False, 'allCompleteMission': False, 'playMission': [], 'levelUpTimesMission': 0}})
         print('init mission complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
     except Exception as err:
         print('init mission fail at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
@@ -84,10 +84,35 @@ def init_users_daily_games():
             else: # 禮拜二、五要練習
                 games = DB_GAMES_LIST[count%5]
                 doc['games'] = games
-                comp_users_game_count_collect.find_one_and_update({'_id': '0'}, {'$inc': {'count': 1}})
+                comp_users_game_count_collect.find_one_and_update({'_id': '0'}, {'': {'count': 1}})
 
             users_daily_games_collect.insert_one(doc)
             print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+
+
+
+# TODO: 紀錄每日的users_complete_records(紀錄每天是否完成任務)
+def insert_users_complete_records():
+    db = client['cgu_db']
+    week_count_collect = db['week_count']
+    week_count_doc = week_count_collect.find_one({'_id': 0})
+
+    nowWeek = week_count_doc['week'] # 這週週次
+    nowTime = datetime.now().strftime("%Y-%m-%d") # 今天日期
+    
+    users_mission_collect = db['users_mission']
+    users_complete_records_collect = db['users_complete_records']
+
+    users_mission_doc = users_mission_collect.find({})
+    for user in list(users_mission_doc):
+        obj = {
+            'date': nowTime,
+            'week': nowWeek,
+            'loginMission': user['loginMission'],
+            'allCompleteMission': user['allCompleteMission'],
+        }
+        users_complete_records_collect.find_one_and_update({'account': user['account']}, {'$push': {'records': obj}},{'_id': False})
+        print('insert', user['account'], 'records complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
 
 
 
@@ -141,6 +166,12 @@ def local_backup():
         'cmd': 'mongoexport --db cgu_db --collection users_games_records --out ./backup/'+nowTime+'/users_games_records.json'
     }
 
+    # TODO:
+    users_complete_records_cmd = {
+        'name': 'users_complete_records',
+        'cmd': 'mongoexport --db cgu_db --collection users_complete_records --out ./backup/'+nowTime+'/users_complete_records.json'
+    }
+
     users_mission_cmd = {
         'name': 'users_mission',
         'cmd': 'mongoexport --db cgu_db --collection users_mission --out ./backup/'+nowTime+'/users_mission.json'
@@ -162,7 +193,7 @@ def local_backup():
     }
     
     # 執行備份
-    cmd_list = [users_cmd, admins_cmd, parents_cmd, comp_users_game_count_cmd, users_daily_games_cmd, users_games_level_cmd, users_games_records_cmd, users_mission_cmd, gifts_cmd, gift_exchange_cmd, week_count_cmd]
+    cmd_list = [users_cmd, admins_cmd, parents_cmd, comp_users_game_count_cmd, users_daily_games_cmd, users_games_level_cmd, users_games_records_cmd, users_complete_records_cmd, users_mission_cmd, gifts_cmd, gift_exchange_cmd, week_count_cmd]
     for cmd in cmd_list:
         try:
             os.system(cmd['cmd'])

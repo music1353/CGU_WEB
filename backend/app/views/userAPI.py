@@ -171,6 +171,10 @@ def user_update_game_time():
         # 升級+20token
         user_collect = db['users']
         user_collect.find_one_and_update({'account': session['account']}, {'$inc': {'token': 20}})
+
+        # 升級levelUpTimesMission+1
+        user_mission_collect = db['users_mission']
+        user_mission_collect.find_one_and_update({'account': session['account']}, {'$inc': {'levelUpTimesMission': 1}})
         
         # 若已經是最高level, 不更改level
         if nowLevel=='7' and (gameNameEN=='PrePet' or gameNameEN=='BackPet' or gameNameEN=='PreAnimal' or gameNameEN=='BackAnimal'):
@@ -303,3 +307,35 @@ def user_save_game_records():
         }
         return jsonify(resp)
     
+
+@app.route('/api/user/dailyMission', methods=['GET'])
+def user_daily_mission():
+    '''取得使用者每日任務的進度
+    Params:
+        None
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': loginMission, allCompleteMission, completeGameTimes, levelUpTimesMission
+            'msg': ''
+        }
+    '''
+
+    collect = db['users_mission']
+    doc = collect.find_one({'account': session['account']}, {'_id': False})
+
+    completeGameTimes = len(doc['playMission'])
+
+    result = {
+        'loginMission': doc['loginMission'],
+        'allCompleteMission': doc['allCompleteMission'],
+        'completeGameTimes': completeGameTimes,
+        'levelUpTimesMission': doc['levelUpTimesMission']
+    }
+
+    resp = {
+        'status': '200',
+        'result': result,
+        'msg': '取得使用者每日任務的進度成功'
+    }
+    return jsonify(resp)

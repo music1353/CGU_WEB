@@ -12,9 +12,9 @@
                 <!-- 登入表單部分 -->
                 <v-layout column style="margin-left: 40px; margin-right: 40px;">
                   <div class="display-1 font-weight-medium" style="padding-bottom: 20px;">開始今天的遊戲
-                    <a class="ranking-btn" href="javascript:void(0)" @click="rankDialog=true">
+                    <!-- <a class="ranking-btn" href="javascript:void(0)" @click="rankDialog=true">
                       <i class="fas fa-trophy" style="font-size: 14px;"></i> 排行榜
-                    </a>
+                    </a> -->
                   </div>
                  
                   <v-flex md8>
@@ -34,6 +34,7 @@
         </v-flex>
       </v-layout>
     </v-container>
+
     <!-- forget password dialog -->
     <v-dialog v-model="forgetPwdDialog" max-width="290">
       <v-card>
@@ -60,7 +61,7 @@
     <!-- forget password dialog -->
     
     <!-- rank dialog start -->
-    <v-dialog v-model="rankDialog" max-width="500">
+    <!-- <v-dialog v-model="rankDialog" max-width="500">
       <v-tabs v-model="rankTabModel" dark centered color="orange darken-1" slider-color="orange darken-3" @change="changeTab" fixed-tabs>
         <v-tab v-for="item in rankModelList" :key="item">
           {{ item }}
@@ -85,7 +86,7 @@
           </v-card>
         </v-tab-item>
       </v-tabs-items>
-    </v-dialog>
+    </v-dialog> -->
     <!-- rank dialog end -->
   </section>
   <loading :parentToChild="loading" parentText="登入中..."></loading>
@@ -220,6 +221,7 @@ export default {
         }
       });
     },
+    // rank
     getWeek() {
       axios.get('/api/rank/getWeek').then((response) => {
         let res = response.data;

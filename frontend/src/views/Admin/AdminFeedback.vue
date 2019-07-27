@@ -11,9 +11,16 @@
           <v-flex layout xs12 md4 style="margin: 7px;" v-for="fb in filterTable" :key="fb.pAccount">
             <v-hover>
               <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto" width="500">
-                <v-card-title class="mb-0 pb-0">
-                  <span class="headline">{{ fb.pName }}</span>
-                  <span class="grey--text ml-1">{{ fb.pAccount }}</span>
+                <v-card-title class="mb-0 pb-0" style="display: inline-block; width: 100%;">
+                  <span class="headline">{{ fb.chName }}</span>
+                  <span class="grey--text ml-1">{{ fb.chAccount }}</span>
+
+                  <v-chip color="primary" small outline text-color="primary" style="float: right;">
+                    <v-avatar>
+                      <v-icon>account_circle</v-icon>
+                    </v-avatar>
+                    {{ fb.pName }}
+                  </v-chip>
                 </v-card-title>
                 <v-layout>
                   <v-flex md6>

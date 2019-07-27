@@ -44,7 +44,7 @@
 
   ~~~json
   _id: "0", 
-  count: 0 // [int] 一週玩兩次，用來記錄game的順序
+  count: 0 // [Int] 一週玩兩次，用來記錄game的順序
   ~~~
 
 * **users_daily_games**：記錄測試者每天可以玩的遊戲及他有沒有完成 (每天00:00:01更新)
@@ -65,12 +65,26 @@
   ~~~json
   account: "", // 使用者帳號
   records: [{
-      date: "", // [yyyy-mm-dd] 當天遊玩日期
-      gameNameEN: "",
-      level: "",
-      respTime: "",
-      trueRate: "",
-      trueCount: ""
+    date: "", // [yyyy-mm-dd] 當天遊玩日期
+    gameNameEN: "",
+    level: "",
+    respTime: "",
+    trueRate: "",
+    trueCount: ""
+  }]
+  ~~~
+
+* **users_complete_records**：記錄使用者每日的**登入任務**及**遊戲完成任務**，假如一週都乖乖就送禮
+
+  ~~~json
+  account: "", // 使用者帳號
+  name: "", // 使用者姓名
+  authority: "", // 使用者身份
+  records: [{
+    date: "", // [yyyy-mm-dd] 當天日期
+    week: 1, // [Int] 當週週次,
+    loginMission: false, // [Boolean] 登入任務
+    allCompleteMission: false, // [Boolean] 完成所有的game
   }]
   ~~~
 
@@ -78,9 +92,10 @@
 
   ~~~json
   account: "", // 使用者帳號
-  loginMission: "", // [Boolean] 每日登入任務, 每日刷新,
-  allCompleteMission: "", // [Boolean] 完成所有的game
-  playMission: [] // [Array] 紀錄今天完成的gameNameEN
+  loginMission: false, // [Boolean] 每日登入任務, 每日刷新,
+  allCompleteMission: false, // [Boolean] 完成所有的game
+  playMission: [], // [Array] 紀錄今天完成的gameNameEN
+  levelUpTimesMission: 0 // [Int] 紀錄今日遊戲升級了幾次(最多6次)
   ~~~
 
 * **parents**：家長
@@ -175,6 +190,7 @@
   | GET        | URL/user/getGameIsComplete   | 遊戲是否已完成                  | gameNameEN                                       | complete                                                     |
   | POST       | URL/user/updateTimesAndLevel | 更新每日遊戲可以玩的次數和level | gameNameEN                                       |                                                              |
   | POST       | URL/user/saveGameRecords     | 存遊玩紀錄                      | gameNameEN, level, respTime, trueRate, trueCount |                                                              |
+  | GET        | URL/user/dailyMission        | 取得使用者每日任務的進度        |                                                  | loginMission, allCompleteMission,  completeGameTimes, levelUpTimesMission |
   
 * **adminAPI**：管理員
 
@@ -188,6 +204,7 @@
   | POST       | URL/admin/addOneUser        | 增加一位使用者(user綁parent)                | authority, account, pwd, name, Pauthority(家長權限), Paccount(家長帳號), Ppwd(家長密碼), Pname(家長姓名), phone |                                                              |
   | POST       | URL/admin/delOneUser        | 刪除一位使用者(user綁parent)                | account, Paccount(家長帳號)                                  |                                                              |
   | POST       | URL/admin/addCsvUser        | 批次增加使用者                              | [{身份, 姓名, 帳號, 密碼, 家長姓名, 家長帳號, 家長密碼, 聯絡電話}] |                                                              |
+  | GET        | URL/admin/doneMissionUser   | 取得各週完成登入任務及全部完成任務的名單    | week                                                         | userTestList:[{account, name}], userCompList:[{account, name}] |
   
 * **parentAPI**：家長
 
