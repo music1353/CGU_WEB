@@ -102,17 +102,24 @@ def insert_users_complete_records():
     
     users_mission_collect = db['users_mission']
     users_complete_records_collect = db['users_complete_records']
+    users_daily_games_collect = db['users_daily_games']
 
     users_mission_doc = users_mission_collect.find({})
     for user in list(users_mission_doc):
-        obj = {
-            'date': nowTime,
-            'week': nowWeek,
-            'loginMission': user['loginMission'],
-            'allCompleteMission': user['allCompleteMission'],
-        }
-        users_complete_records_collect.find_one_and_update({'account': user['account']}, {'$push': {'records': obj}},{'_id': False})
-        print('insert', user['account'], 'records complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+        # 先檢查今天是否有遊戲需要訓練，有的話才紀錄
+        users_daily_games_doc = users_daily_games_collect.find_one({'account': user['account']}, {'_id': False})
+
+        if len(users_daily_games_doc['games'])>0: # 當天有訓練遊戲
+            obj = {
+                'date': nowTime,
+                'week': nowWeek,
+                'loginMission': user['loginMission'],
+                'allCompleteMission': user['allCompleteMission'],
+            }
+            users_complete_records_collect.find_one_and_update({'account': user['account']}, {'$push': {'records': obj}},{'_id': False})
+            print('insert', user['account'], 'records complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+        else: # 當天不用訓練
+            print(user['account'], '當天不用訓練遊戲！')
 
 
 
