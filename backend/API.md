@@ -55,7 +55,7 @@
   games: [{
     [gameNameEN]: { // 這個遊戲的遊戲名
       playTimes: "", // 這個遊戲玩的次數(最多2次，完成)
-      complete: "", // [Boolean] 這個遊戲是否完成
+      complete: false, // [Boolean] 這個遊戲是否完成
     }
   }]
   ~~~

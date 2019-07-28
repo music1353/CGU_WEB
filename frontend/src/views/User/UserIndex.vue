@@ -101,14 +101,18 @@ export default {
         if (res.status == '200') {
           this.gamesCards = res.result;
 
-          // 檢查今天的遊戲是否都已完成
+           // 檢查今天的遊戲是否都已完成，如果都沒遊戲則completeFlag = false
           let completeFlag  = true;
-          res.result.forEach((item) => {
-            if (item.complete == false) {
-              completeFlag = false;
-            }
-          });
-          this.todayIsComplete = completeFlag;
+          if (res.result.length == 0) {
+            completeFlag = false;
+          } else {
+            res.result.forEach((item) => {
+              if (item.complete == false) {
+                completeFlag = false;
+              }
+            });
+            this.todayIsComplete = completeFlag;
+          }
         }
       });
     },

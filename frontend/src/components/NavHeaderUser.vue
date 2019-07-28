@@ -132,7 +132,7 @@ export default {
       missionData: {
         'loginMission': false, // 登入任務 +50
         'completeGameTimes': 0, // 完成一個遊戲的次數(最多3次) +10
-        'allCompleteMission': true, // 所有遊戲都完成 +20
+        'allCompleteMission': false, // 所有遊戲都完成 +20
         'levelUpTimesMission': 0 // 遊戲升級次數(最多6次) +20
       }
     }

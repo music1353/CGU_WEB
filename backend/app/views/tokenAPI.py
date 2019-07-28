@@ -35,7 +35,7 @@ def token_get_token_num():
 
 @app.route('/api/token/loginMission', methods=['POST'])
 def token_login_mission():
-    '''登入任務，完成任務+50
+    '''登入任務，完成任務+50 (當天有訓練遊戲才獎賞)
     Params:
         None
     Returns:
@@ -49,7 +49,12 @@ def token_login_mission():
     mission_collect = db['users_mission']
     mission_doc = mission_collect.find_one({'account': session['account']}, {'_id': False})
 
-    if mission_doc['loginMission'] == False: # 今天登入任務還沒完成且登入 +50
+    # TODO: 當天有訓練遊戲才獎賞
+    users_daily_games_collect = db['users_daily_games']
+    users_daily_games_doc = users_daily_games_collect.find_one({'account': session['account']}, {'_id': False})
+    todayGames = users_daily_games_doc['games']
+
+    if mission_doc['loginMission'] == False and len(todayGames)>0: # 今天登入任務還沒完成且登入 +50
         user_collect = db['users']
         user_collect.find_one_and_update({'account': session['account']}, {'$inc': {'token': 50}})
         mission_collect.find_one_and_update({'account': session['account']}, {'$set': {'loginMission': True}})
