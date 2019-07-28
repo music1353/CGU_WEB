@@ -61,7 +61,7 @@
     <v-card flat class="pa-4">
       <p style="font-size: 18px; text-align: center;">
         <i class="far fa-calendar-alt"></i>
-        {{ week }} - {{ authCHIN }}
+        {{ week }}
       </p>
       <v-data-table id="rank-table" :headers="headers" :items="rankData" class="elevation-1" hide-actions>
         <template slot="items" slot-scope="props">
