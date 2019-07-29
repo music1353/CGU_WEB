@@ -84,10 +84,13 @@ def init_users_daily_games():
             else: # 禮拜二、五要練習
                 games = DB_GAMES_LIST[count%5]
                 doc['games'] = games
-                comp_users_game_count_collect.find_one_and_update({'_id': '0'}, {'$inc': {'count': 1}})
 
             users_daily_games_collect.insert_one(doc)
             print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+
+    # 禮拜二、五要練習 => 對照組 comp_users_game_count+1
+    if dayOfWeek==1 or dayOfWeek==4: # 禮拜二、五
+        comp_users_game_count_collect.find_one_and_update({'_id': '0'}, {'$inc': {'count': 1}})
 
 
 
