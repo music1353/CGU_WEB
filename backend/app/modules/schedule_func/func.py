@@ -84,7 +84,7 @@ def init_users_daily_games():
             else: # 禮拜二、五要練習
                 games = DB_GAMES_LIST[count%5]
                 doc['games'] = games
-
+            
             users_daily_games_collect.insert_one(doc)
             print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
 
