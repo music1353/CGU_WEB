@@ -90,7 +90,7 @@ export default {
         'linkto': 'giftRecord'
       }, {
         'icon': 'border_color',
-        'title': '意見回饋',
+        'title': '家長回饋',
         'linkto': 'feedback'
       }, {
         'icon': 'fas fa-database',

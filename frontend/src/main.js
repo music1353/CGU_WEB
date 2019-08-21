@@ -11,7 +11,6 @@ import '@mdi/font/css/materialdesignicons.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@/assets/css/basic.css'
 import '@/assets/css/vuetify-plugin.css'
-
  
 Vue.use(Vuetify)
 

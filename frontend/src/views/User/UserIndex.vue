@@ -14,7 +14,7 @@
               <v-img :aspect-ratio="16/9" :src="card.imgURL"></v-img>
               <v-card-title>
                 <div>
-                  <span class="headline"> {{card.gameNameCH}} </span>
+                  <span class="headline"> {{ card.gameNameCH }} </span>
                   <div class="d-flex">
                     <div class="ml-2 grey--text text--darken-2">
                       <span>({{ card.level }})</span>
@@ -22,7 +22,7 @@
                   </div>
                 </div>
                 <v-spacer></v-spacer>
-                <v-btn icon class="mr-0" :to="card.link" :disabled='card.complete'>
+                <v-btn icon class="mr-0" @click="toGame(card.gameNameEN, card.link)" :disabled='card.complete'>
                   <v-icon>mdi-chevron-right</v-icon>
                 </v-btn>
               </v-card-title>
@@ -139,6 +139,22 @@ export default {
           }
         }
       });
+    },
+    toGame(gameNameEN, link) {
+      var date = new Date();
+      let nowTime = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+
+      axios.post('/api/user/setTrainTime', {
+        gameNameEN: gameNameEN,
+        startTime: nowTime
+      }).then((response) => {
+        let res = response.data;
+        if (res.status == '200') {
+          // pass
+        }
+      });
+      
+      this.$router.push(link);
     }
   }
 }

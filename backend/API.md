@@ -70,7 +70,9 @@
     level: "",
     respTime: "",
     trueRate: "",
-    trueCount: ""
+    trueCount: "",
+    startTime: "", // [yyyy-mm-dd HH-mm-ss], 遊戲開始時間
+    trainTime: "" // 遊戲進行時間
   }]
   ~~~
 
@@ -98,6 +100,14 @@
   levelUpTimesMission: 0 // [Int] 紀錄今日遊戲升級了幾次(最多6次)
   ~~~
 
+* **users_train_time**：暫存使用者遊玩遊戲的**開始訓練時間** (每個帳號只會暫存一筆)，最後在**saveGameRecords**時提出並清除，最後算出trainTime紀錄進**users_games_records**
+
+  ~~~json
+  account: "",
+  gameNameEN: "",
+  startTime: "", // [yyyy-mm-dd HH-mm-ss],遊戲開始時間
+  ~~~
+  
 * **parents**：家長
 
   ~~~json
@@ -182,15 +192,16 @@
 
 * **userAPI**：測試者
 
-  | API Method | API URL                      | Desc                            | Req Params                                       | Resp Result                                                  |
-  | ---------- | ---------------------------- | ------------------------------- | ------------------------------------------------ | ------------------------------------------------------------ |
-  | GET        | URL/user/getGames            | 取得當天可以練習的遊戲          |                                                  | [{gameNameCH, gameNameEN, imgURL, level, link, complete}]    |
-  | GET        | URL/user/getLevel            | 取得所有遊戲的level             |                                                  | PrePet, BackPet, PreAnimal, BackAnimal, Teacher, Where, Ball |
-  | POST       | URL/user/updateLevel         | 更新遊戲的level                 | gameNameEN, level                                |                                                              |
-  | GET        | URL/user/getGameIsComplete   | 遊戲是否已完成                  | gameNameEN                                       | complete                                                     |
-  | POST       | URL/user/updateTimesAndLevel | 更新每日遊戲可以玩的次數和level | gameNameEN                                       |                                                              |
-  | POST       | URL/user/saveGameRecords     | 存遊玩紀錄                      | gameNameEN, level, respTime, trueRate, trueCount |                                                              |
-  | GET        | URL/user/dailyMission        | 取得使用者每日任務的進度        |                                                  | loginMission, allCompleteMission,  completeGameTimes, levelUpTimesMission |
+  | API Method | API URL                      | Desc                            | Req Params                                                | Resp Result                                                  |
+  | ---------- | ---------------------------- | ------------------------------- | --------------------------------------------------------- | ------------------------------------------------------------ |
+  | GET        | URL/user/getGames            | 取得當天可以練習的遊戲          |                                                           | [{gameNameCH, gameNameEN, imgURL, level, link, complete}]    |
+  | GET        | URL/user/getLevel            | 取得所有遊戲的level             |                                                           | PrePet, BackPet, PreAnimal, BackAnimal, Teacher, Where, Ball |
+  | POST       | URL/user/updateLevel         | 更新遊戲的level                 | gameNameEN, level                                         |                                                              |
+  | GET        | URL/user/getGameIsComplete   | 遊戲是否已完成                  | gameNameEN                                                | complete                                                     |
+  | POST       | URL/user/updateTimesAndLevel | 更新每日遊戲可以玩的次數和level | gameNameEN                                                |                                                              |
+  | POST       | URL/user/saveGameRecords     | 存遊玩紀錄                      | gameNameEN, level, respTime, trueRate, trueCount, endTime |                                                              |
+  | GET        | URL/user/dailyMission        | 取得使用者每日任務的進度        |                                                           | loginMission, allCompleteMission,  completeGameTimes, levelUpTimesMission |
+  | *POST      | URL/user/setTrainTime        | 紀錄正在訓練遊戲的開始時間      | gameNameEN, startTime                                     |                                                              |
   
 * **adminAPI**：管理員
 
@@ -205,6 +216,8 @@
   | POST       | URL/admin/delOneUser        | 刪除一位使用者(user綁parent)                | account, Paccount(家長帳號)                                  |                                                              |
   | POST       | URL/admin/addCsvUser        | 批次增加使用者                              | [{身份, 姓名, 帳號, 密碼, 家長姓名, 家長帳號, 家長密碼, 聯絡電話}] |                                                              |
   | GET        | URL/admin/doneMissionUser   | 取得各週完成登入任務及全部完成任務的名單    | week                                                         | userTestList:[{account, name}], userCompList:[{account, name}] |
+  | *GET       | URL/admin/getUserTrainInfo  | 刪除紀錄                                    | account                                                      | [{gameNameEN, gameNameCH, level, isLevelUp, startTime, trainTime}] |
+  | *GET       | URL/admin/getChildLevel     | 取得使用者所有遊戲的level                   | account                                                      | PrePet, BackPet, PreAnimal, BackAnimal, Teacher, Where, Ball |
   
 * **parentAPI**：家長
 

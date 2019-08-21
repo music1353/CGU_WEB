@@ -3,7 +3,12 @@
 <v-app>
   <nav-header-user-game></nav-header-user-game>
   <v-content>
+
+    <v-alert class="game-alert" v-model="alertFlag" dismissible type="info">
+      {{ alertContent }}
+    </v-alert>
     <v-container fluid >
+      
       <unity :src="sourceJson" :unityLoader="sourceLoader" ref="myInstance"></unity>
     </v-container>
   </v-content>
@@ -27,9 +32,12 @@ export default {
   },
   data() {
     return {
-     gameNameEN: '',
-     sourceJson: '',
-     sourceLoader: ''
+      gameNameEN: '',
+      sourceJson: '',
+      sourceLoader: '',
+      // alert
+      alertFlag: true, // 遊戲的提醒條
+      alertContent: ''
     }
   },
   created() {
@@ -40,6 +48,7 @@ export default {
   mounted() {
     this.checkLogin();
     this.checkIsComplete();
+    this.setAlert();
   },
   methods: {
     checkLogin() {
@@ -72,10 +81,34 @@ export default {
           }
         }
       })
+    },
+    setAlert() {
+      let gameName = this.gameNameEN.split("_")[0];
+      
+      if (gameName == 'PrePet') {
+        this.alertContent = '按照彈跳的順序點選';
+      } else if (gameName == 'BackPet') {
+        this.alertContent = '按照彈跳的"相反順序"點選';
+      } else if (gameName == 'PreAnimal') {
+        this.alertContent = '按照動物聲音的順序點選';
+      } else if (gameName == 'BackAnimal') {
+        this.alertContent = '按照動物聲音的"相反順序"點選';
+      } else if (gameName == 'Where') {
+        this.alertContent = '綠色松果：松果尖端方向。褐色松果：松果移動方向'
+      } else {
+        this.alertFlag = false;
+      }
     }
   }
 }
 </script>
 
 <style>
+.game-alert {
+  position: absolute;
+  right: 0px;
+  z-index: 2000;
+  font-size: 20px;
+}
 </style>
+

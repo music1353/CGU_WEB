@@ -272,6 +272,7 @@ def user_save_game_records():
     respTime = request.json['respTime']
     trueRate = request.json['trueRate']
     trueCount = request.json['trueCount']
+    endTime = request.json['endTime']
 
     collect = db['users_games_records']
     date = datetime.now().strftime("%Y-%m-%d") # 今天日期
@@ -290,8 +291,18 @@ def user_save_game_records():
     if trueCount != 'X':
         obj['trueCount'] = trueCount
 
+    # 計算遊玩時間
+    users_train_time_collect = db['users_train_time']
+    users_train_time_doc = users_train_time_collect.find_one({'account': session['account']}, {'_id': False})
+    ## 計算時間差
+    startTime = datetime.strptime(users_train_time_doc['startTime'], "%Y-%m-%d %H:%M:%S")
+    endTime =  datetime.strptime(endTime, "%Y-%m-%d %H:%M:%S")
+    train_time_in_sec = (endTime - startTime).seconds
+    obj['startTime'] = users_train_time_doc['startTime']
+    obj['trainTime'] = train_time_in_sec
+
     try:
-        collect.find_one_and_update({'account': session['account'],}, {'$push': {'records': obj}},{'_id': False})
+        collect.find_one_and_update({'account': session['account']}, {'$push': {'records': obj}},{'_id': False})
         
         resp = {
             'status': '200',
@@ -337,5 +348,45 @@ def user_daily_mission():
         'status': '200',
         'result': result,
         'msg': '取得使用者每日任務的進度成功'
+    }
+    return jsonify(resp)
+
+
+@app.route('/api/user/setTrainTime', methods=['POST'])
+def user_set_train_time():
+    '''紀錄正在訓練遊戲的開始時間
+    Params:
+        gameNameEN, startTime
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': ''
+            'msg': ''
+        }
+    '''
+    gameNameEN = request.json['gameNameEN']
+    startTime = request.json['startTime']
+    
+    collect = db['users_train_time']
+    # 如果沒有此用戶, 建立一個此用戶的doc
+    doc = collect.find_one({'account': session['account']}, {'_id': False})
+    if doc == None:
+        obj = {
+            'account': session['account'],
+            'gameNameEN': '',
+            'startTime': ''
+        }
+        collect.insert(obj);
+        print(session['account'], '在users_train_time沒有doc, 創立新doc成功!')
+        doc = collect.find_one({'account': session['account']}, {'_id': False}) # 再找一次
+    else:
+        pass # has the user's doc
+
+    collect.find_one_and_update({'account': session['account']}, {'$set': {'gameNameEN': gameNameEN, 'startTime': startTime}})
+
+    resp = {
+        'status': '200',
+        'result': '',
+        'msg': '紀錄正在訓練遊戲的開始時間成功'
     }
     return jsonify(resp)

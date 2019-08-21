@@ -73,12 +73,16 @@
         });
         
         // 儲存遊戲紀錄
+        var date = new Date();
+        let nowTime = date.getFullYear()+'-'+(date.getMonth()+1)+'-'+date.getDate()+' '+date.getHours()+':'+date.getMinutes()+':'+date.getSeconds();
+
         axios.post('/api/user/saveGameRecords',{
           gameNameEN: gameNameEN,
           level: level,
           respTime: respTime,
           trueRate: trueRate,
-          trueCount: trueCount
+          trueCount: trueCount,
+          endTime: nowTime
         }).then((response)=> {
           let res = response.data;
           if(res.status == '200') {

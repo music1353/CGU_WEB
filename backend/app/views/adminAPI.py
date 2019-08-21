@@ -3,6 +3,7 @@ from config import MONGO_URI, client
 from flask import jsonify, session, request
 from datetime import datetime
 from app.modules.game_setter import setter
+from gameConfig import GAME_CH_NAME_DICT, LEVEL_CH_DICT
 import pprint
 
 # 連進MongoDB
@@ -603,5 +604,101 @@ def get_done_mission_user():
         'status': '200',
         'result': resultObj,
         'msg': '取得各週完成登入任務及全部完成任務的名單成功！'
+    }
+    return jsonify(resp)
+
+
+@app.route('/api/admin/getUserTrainInfo', methods=['GET'])
+def admin_get_user_train_info():
+    '''取得使用者當天的訓練資訊
+    Params:
+        [{gameNameEN, level, isLevelUp, startTime, trainTime}]
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': ''
+            'msg': ''
+        }
+    '''
+
+    account = request.args.get('account')
+    date = datetime.now().strftime("%Y-%m-%d")
+    
+    users_games_records_collect = db['users_games_records']
+    users_games_records_doc = users_games_records_collect.find_one({'account': account}, {'_id': False})
+
+    result_list = []
+    for record in users_games_records_doc['records']:
+        if record['date'] == date: # 如果紀錄是今天的日期
+            obj = {
+                'gameNameEN': record['gameNameEN'],
+                'gameNameCH': GAME_CH_NAME_DICT[record['gameNameEN']],
+                'level': record['level'],
+                'isLevelUp': int(record['trueRate'])>=80,
+                'startTime': record['startTime'],
+                'trainTime': record['trainTime']
+            }
+            result_list.append(obj)
+
+    resp = {
+        'status': '200',
+        'result': result_list,
+        'msg': '取得使用者當天的訓練資訊成功'
+    }
+    return jsonify(resp)
+
+
+@app.route('/api/admin/getChildLevel', methods=['GET'])
+def admin_get_child_level():
+    '''取得使用者所有遊戲的level
+    Params:
+        none
+    Returns:
+        {
+            'status': '200'->成功; '404'->失敗
+            'result': 各個遊戲的level
+            'msg': ''
+        }
+    '''
+
+    account = request.args.get('account')
+    
+    collect = db['users_games_level']
+    doc = collect.find_one({'account': account}, {'_id': False})
+
+    obj = [{
+        'gameNameEN': 'PrePet',
+        'gameNameCH': '正序寵物樂園',
+        'level': LEVEL_CH_DICT[doc['PrePet']]
+    }, {
+        'gameNameEN': 'BackPet',
+        'gameNameCH': '逆序寵物樂園',
+        'level': LEVEL_CH_DICT[doc['BackPet']]
+    }, {
+        'gameNameEN': 'PreAnimal',
+        'gameNameCH': '正序動物農莊',
+        'level': LEVEL_CH_DICT[doc['PreAnimal']]
+    }, {
+        'gameNameEN': 'BackAnimal',
+        'gameNameCH': '逆序動物農莊',
+        'level': LEVEL_CH_DICT[doc['BackAnimal']]
+    }, {
+        'gameNameEN': 'Teacher',
+        'gameNameCH': '老師點點名',
+        'level': LEVEL_CH_DICT[doc['Teacher']]
+    }, {
+        'gameNameEN': 'Where',
+        'gameNameCH': '橡果去哪兒',
+        'level': LEVEL_CH_DICT[doc['Where']]
+    }, {
+        'gameNameEN': 'Ball',
+        'gameNameCH': '球球滿天飛',
+        'level': LEVEL_CH_DICT[doc['Ball']]
+    }]
+
+    resp = {
+        'status': '200',
+        'result': obj,
+        'msg': '使用者遊戲level請求成功'
     }
     return jsonify(resp)

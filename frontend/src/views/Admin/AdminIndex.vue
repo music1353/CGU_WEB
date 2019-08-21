@@ -16,7 +16,7 @@
               <v-layout align-center justify-start row fill-height wrap>
                 <v-flex layout lg2 md3 v-for="item in testGroupData" :key="item.account" style="margin: 7px;">
                   <v-hover>
-                    <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto" width="344">
+                    <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="student-card mx-auto" width="344" @click="showStudentTrainInfo(item.account, item.name)">
                       <v-card-title primary-title>
                         <div>
                           <div class="headline">{{ item.name }}</div>
@@ -46,7 +46,7 @@
               <v-layout align-center justify-start row fill-height wrap>
                 <v-flex layout lg2 md3 v-for="item in compGroupData" :key="item.account" style="margin: 7px;">
                   <v-hover>
-                    <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto" width="344">
+                    <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="student-card mx-auto" width="344" @click="showStudentTrainInfo(item.account, item.name)">
                       <v-card-title primary-title>
                         <div>
                           <div class="headline">{{ item.name }}</div>
@@ -112,6 +112,63 @@
       </v-card>
     </v-container fluid>
   </v-content>
+
+  <v-dialog v-model="userTrainInfoDialog" width="70vw">
+    <v-card>
+      <v-card-title class="headline grey lighten-2" primary-title>
+        {{ trainInfoName }} &nbsp;
+        <span class="body-1">{{ trainInfoAccount }}</span>
+      </v-card-title>
+      <v-card-text style="font-size: 20px;">
+        <!-- 訓練遊戲進度 -->
+        <v-layout align-center justify-start row wrap>
+          <v-flex class="pl-3" md12>
+            <p class="headline blue--text text--darken-3">各訓練遊戲進度</p>
+          </v-flex>
+          <v-flex layout md3 v-for="game in userChildLevelData" class="px-3 mb-3" :key="game.gameNameEN">
+            <v-hover>
+              <v-card slot-scope="{ hover }" :class="`elevation-${hover ? 12 : 2}`" class="mx-auto" width="344">
+                <v-card-title>
+                  <div class="title"> {{game.gameNameCH}}</div>
+                  <div class="body-1">({{ game.level }})</div>
+                  <v-spacer></v-spacer>
+                </v-card-title>
+              </v-card>
+            </v-hover>
+          </v-flex>
+        </v-layout>
+        <v-divider></v-divider>
+
+        <!-- 今天進行遊戲的資料 -->
+        <v-layout class="mt-3" row wrap>
+          <v-flex class="pl-3" md12>
+            <p class="headline blue--text text--darken-3">已完成遊戲</p>
+          </v-flex>
+          <div v-if="isTrainData">
+            <v-flex class="ml-3" md12 v-for="(data, index) in userTrainData" :key="index+1">
+              <v-chip v-if="data.isLevelUp" class="ma-2" color="green" text-color="white">升級</v-chip>
+              <v-chip v-else class="ma-2" color="red" text-color="white" label small>失敗</v-chip>
+              <span class="subheading">{{ data.gameNameCH }}</span>
+              <span class="ml-3">
+                <v-icon class="fas fa-play-circle" style="font-size: 15px; line-height:18px;color:#689F38;"></v-icon>
+                <span class="subheading">{{ data.startTime }}</span>
+              </span>
+              <span class="ml-3">
+                <v-icon class="fas fa-hourglass-half" style="font-size: 15px; line-height:18px;color:#F57C00;"></v-icon>
+                <span class="subheading">{{ data.trainTime }} s</span>
+              </span>
+            </v-flex>
+          </div>
+          <span class="title grey--text ml-3" v-if="isTrainData==false">未有完成的訓練遊戲</span>
+        </v-layout>
+      </v-card-text>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-spacer></v-spacer>
+        <v-btn color="primary" flat @click="userTrainInfoDialog=false">了解</v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
 </v-app>
 </div>
 </template>
@@ -137,7 +194,14 @@ export default {
       weekItems: ['第一週', '第二週', '第三週', '第四週', '第五週', '第六週', '第七週'],
       weekSelect: '第一週',
       userTestList: [], // 測試組：選定週完成登入任務及全部完成任務的名單
-      userCompList: [] // 對照組
+      userCompList: [], // 對照組
+      // userTrainInfoDialog
+      trainInfoAccount: '',
+      trainInfoName: '',
+      userTrainInfoDialog: false,
+      userChildLevelData: [],
+      isTrainData: true, // 是否有完成的遊戲
+      userTrainData: []
     }
   },
   mounted() {
@@ -223,12 +287,29 @@ export default {
       else if (this.weekSelect == '第十週') reqWeek = 10;
 
       this.getDoneMissionUser(reqWeek);
+    },
+    async showStudentTrainInfo(account, name) {
+      let trainInfoResp = await axios.get('/api/admin/getUserTrainInfo', {params: {account: account}});
+      let childLevelResp = await axios.get('/api/admin/getChildLevel', {params: {account: account}});
+
+      this.trainInfoAccount = account;
+      this.trainInfoName = name;
+      this.userTrainData = trainInfoResp.data.result;
+      if(this.userTrainData.length == 0) this.isTrainData=false;
+      else this.isTrainData=true;
+      this.userChildLevelData = childLevelResp.data.result;
+
+      this.userTrainInfoDialog = true;
     }
   }
 }
 </script>
 
 <style>
+  #today-pratice-status-section .student-card {
+    cursor: pointer;
+  }
+
   #daily-done-panel .date-title-block .date-title {
     color: rgb(29, 29, 155);
     font-size: 30px;
