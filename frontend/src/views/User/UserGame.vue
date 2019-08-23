@@ -105,7 +105,7 @@ export default {
 
 <style>
 .game-alert {
-  position: absolute;
+  position: absolute !important;
   right: 0px;
   z-index: 2000;
   font-size: 20px;
