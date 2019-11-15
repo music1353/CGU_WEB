@@ -1,5 +1,5 @@
 from app import app
-from config import MONGO_URI, client
+from config import client
 from flask import jsonify, session, request
 from datetime import datetime
 
@@ -67,29 +67,29 @@ def get_week():
         }
     '''
 
-    user_collect = db['week_count']
-    user_doc = user_collect.find_one({'_id': 0})
+    week_collect = db['week_count']
+    week_doc = week_collect.find_one({'_id': 0})
 
     re_week = ''
-    if  user_doc['week'] == 1:
+    if  week_doc['week'] == 1:
       re_week = '第一週'
-    elif  user_doc['week'] == 2:
+    elif  week_doc['week'] == 2:
       re_week = '第二週'
-    elif  user_doc['week'] == 3:
+    elif  week_doc['week'] == 3:
       re_week = '第三週'
-    elif  user_doc['week'] == 4:
+    elif  week_doc['week'] == 4:
       re_week = '第四週'
-    elif  user_doc['week'] == 5:
+    elif  week_doc['week'] == 5:
       re_week = '第五週'
-    elif  user_doc['week'] == 6:
+    elif  week_doc['week'] == 6:
       re_week = '第六週'
-    elif  user_doc['week'] == 7:
+    elif  week_doc['week'] == 7:
       re_week = '第七週'
-    elif  user_doc['week'] == 8:
+    elif  week_doc['week'] == 8:
       re_week = '第八週'
-    elif  user_doc['week'] == 9:
+    elif  week_doc['week'] == 9:
       re_week = '第九週'
-    elif  user_doc['week'] == 10:
+    elif  week_doc['week'] == 10:
       re_week = '第十週'
     
     resp = {

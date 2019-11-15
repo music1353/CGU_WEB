@@ -1,0 +1,27 @@
+version: '3'
+services:
+  frontend:
+    container_name: 'cgu-ot-fe'
+    image: music1353/cgu-ot-fe:2.0.0
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+  backend:
+    container_name: 'cgu-ot-be'
+    image: music1353/cgu-ot-be:2.0.0
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+  db:
+    container_name: 'mongo'
+    image: mongo
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - "27017:27017"
+volumes:
+    data-volume:

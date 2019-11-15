@@ -1,5 +1,5 @@
 from app import app
-from config import MONGO_URI, client
+from config import client
 from flask import jsonify, session, request
 from datetime import datetime
 from app.modules.game_setter import setter

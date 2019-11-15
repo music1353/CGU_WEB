@@ -7,3 +7,6 @@ test.py
 games/
 logs/
 .DS_Store
+
+dist/
+/dist

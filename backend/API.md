@@ -27,7 +27,7 @@
   token: "" // [int] 獎勵點數
   ~~~
 
-* **users_games_status**：紀錄測試者每個遊戲**下次要開始玩的level**
+* **users_games_level**：紀錄測試者每個遊戲**下次要開始玩的level**
 
   ~~~json
   account: "",
@@ -126,7 +126,7 @@
   }]
   ~~~
 
-* **feedbacks**：即時回饋
+* **feedbacks**：即時回饋 TODO?
 
   ~~~json
   account: "", // 回饋者帳號
