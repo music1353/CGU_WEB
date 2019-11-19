@@ -2,7 +2,7 @@ version: '3'
 services:
   frontend:
     container_name: 'cgu-ot-fe'
-    image: music1353/cgu-ot-fe:2.0.0
+    image: music1353/cgu-ot-fe:2.0.1
     restart: always
     ports:
       - "80:80"
