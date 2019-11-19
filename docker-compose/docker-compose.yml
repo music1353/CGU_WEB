@@ -8,6 +8,9 @@ services:
       - "80:80"
     environment:
       - TZ=Asia/Taipei
+    logging:
+      options:
+        max-size: "50m"
     depends_on:
       - backend
   backend:
@@ -20,6 +23,9 @@ services:
       - TZ=Asia/Taipei
     volumes:
       - backup-volume:/usr/src/app/backup
+    logging:
+      options:
+        max-size: "50m"
     depends_on:
       - db
   db:
@@ -29,6 +35,9 @@ services:
       - TZ=Asia/Taipei
     volumes:
       - data-volume:/data/db
+    logging:
+      options:
+        max-size: "50m"
     ports:
       - "27017:27017"
 volumes:
