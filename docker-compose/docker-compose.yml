@@ -6,22 +6,31 @@ services:
     restart: always
     ports:
       - "80:80"
+    environment:
+      - TZ=Asia/Taipei
     depends_on:
       - backend
   backend:
     container_name: 'cgu-ot-be'
-    image: music1353/cgu-ot-be:2.0.0
+    image: music1353/cgu-ot-be:t1
     restart: always
     ports:
       - "5000:5000"
+    environment:
+      - TZ=Asia/Taipei
+    volumes:
+      - backup-volume:/usr/src/app/backup
     depends_on:
       - db
   db:
     container_name: 'mongo'
     image: mongo
+    environment:
+      - TZ=Asia/Taipei
     volumes:
       - data-volume:/data/db
     ports:
       - "27017:27017"
 volumes:
     data-volume:
+    backup-volume:

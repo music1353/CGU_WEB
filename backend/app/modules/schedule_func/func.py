@@ -3,6 +3,8 @@ from datetime import datetime
 from gameConfig import DB_GAMES_LIST, TEST_GAME_LIST
 from config import client
 import os
+from app.modules.backup_engine.drive import drive
+from app.modules.backup_engine import local
 
 # 確認APScheduler還活著
 def check_scheduler_alive():
@@ -124,90 +126,98 @@ def insert_users_complete_records():
         else: # 當天不用訓練
             print(user['account'], '當天不用訓練遊戲！')
 
+# google cloud備份
+def cloud_backup():
+    # google drive 備份
+    googledrive = drive()
+    googledrive.backup()
 
 
 # 本地備份
 def local_backup():
-    nowTime = datetime.now().strftime("%Y-%m-%d") # 今天日期
+    local.run_backup()
 
-    # 創建資料夾
-    try:
-        # mkdir_cmd = 'mkdir ./backup/' + nowTime # in linux
-        mkdir_cmd = 'mkdir .\\backup\\' + nowTime # in win
-        os.system(mkdir_cmd)
-        print('創建', nowTime, '資料夾成功！')
-    except Exception as err:
-        print('創建', nowTime, '資料夾失敗！')
-        print('err:', err)
+    # 在有mongo env下才能下mongoexport指令
+    # nowTime = datetime.now().strftime("%Y-%m-%d") # 今天日期
 
-    # 備份每個collection的指令
-    users_cmd = {
-        'name': 'users',
-        'cmd': 'mongoexport --db cgu_db --collection users --out ./backup/'+nowTime+'/users.json'
-    }
+    # # 創建資料夾
+    # try:
+    #     mkdir_cmd = 'mkdir ./backup/' + nowTime # in linux
+    #     # mkdir_cmd = 'mkdir .\\backup\\' + nowTime # in win
+    #     os.system(mkdir_cmd)
+    #     print('創建', nowTime, '資料夾成功！')
+    # except Exception as err:
+    #     print('創建', nowTime, '資料夾失敗！')
+    #     print('err:', err)
 
-    admins_cmd = {
-        'name': 'admins',
-        'cmd': 'mongoexport --db cgu_db --collection admins --out ./backup/'+nowTime+'/admins.json'
-    }
+    # # 備份每個collection的指令
+    # users_cmd = {
+    #     'name': 'users',
+    #     'cmd': './mongoexport --db cgu_db --collection users --out ./backup/'+nowTime+'/users.json'
+    # }
 
-    parents_cmd = {
-        'name': 'parents',
-        'cmd': 'mongoexport --db cgu_db --collection parents --out ./backup/'+nowTime+'/parents.json'
-    }
+    # admins_cmd = {
+    #     'name': 'admins',
+    #     'cmd': './mongoexport --db cgu_db --collection admins --out ./backup/'+nowTime+'/admins.json'
+    # }
 
-    comp_users_game_count_cmd = {
-        'name': 'comp_users_game_count',
-        'cmd': 'mongoexport --db cgu_db --collection comp_users_game_count --out ./backup/'+nowTime+'/comp_users_game_count.json'
-    }
+    # parents_cmd = {
+    #     'name': 'parents',
+    #     'cmd': './mongoexport --db cgu_db --collection parents --out ./backup/'+nowTime+'/parents.json'
+    # }
 
-    users_daily_games_cmd = {
-        'name': 'users_daily_games',
-        'cmd': 'mongoexport --db cgu_db --collection users_daily_games --out ./backup/'+nowTime+'/users_daily_games.json'
-    }
+    # comp_users_game_count_cmd = {
+    #     'name': 'comp_users_game_count',
+    #     'cmd': './mongoexport --db cgu_db --collection comp_users_game_count --out ./backup/'+nowTime+'/comp_users_game_count.json'
+    # }
 
-    users_games_level_cmd = {
-        'name': 'users_games_level',
-        'cmd': 'mongoexport --db cgu_db --collection users_games_level --out ./backup/'+nowTime+'/users_games_level.json'
-    }
+    # users_daily_games_cmd = {
+    #     'name': 'users_daily_games',
+    #     'cmd': './mongoexport --db cgu_db --collection users_daily_games --out ./backup/'+nowTime+'/users_daily_games.json'
+    # }
 
-    users_games_records_cmd = {
-        'name': 'users_games_records',
-        'cmd': 'mongoexport --db cgu_db --collection users_games_records --out ./backup/'+nowTime+'/users_games_records.json'
-    }
+    # users_games_level_cmd = {
+    #     'name': 'users_games_level',
+    #     'cmd': './mongoexport --db cgu_db --collection users_games_level --out ./backup/'+nowTime+'/users_games_level.json'
+    # }
 
-    # TODO:
-    users_complete_records_cmd = {
-        'name': 'users_complete_records',
-        'cmd': 'mongoexport --db cgu_db --collection users_complete_records --out ./backup/'+nowTime+'/users_complete_records.json'
-    }
+    # users_games_records_cmd = {
+    #     'name': 'users_games_records',
+    #     'cmd': './mongoexport --db cgu_db --collection users_games_records --out ./backup/'+nowTime+'/users_games_records.json'
+    # }
 
-    users_mission_cmd = {
-        'name': 'users_mission',
-        'cmd': 'mongoexport --db cgu_db --collection users_mission --out ./backup/'+nowTime+'/users_mission.json'
-    }
+    # # TODO:
+    # users_complete_records_cmd = {
+    #     'name': 'users_complete_records',
+    #     'cmd': './mongoexport --db cgu_db --collection users_complete_records --out ./backup/'+nowTime+'/users_complete_records.json'
+    # }
 
-    gifts_cmd = {
-        'name': 'gifts',
-        'cmd': 'mongoexport --db cgu_db --collection gifts --out ./backup/'+nowTime+'/gifts.json'
-    }
+    # users_mission_cmd = {
+    #     'name': 'users_mission',
+    #     'cmd': './mongoexport --db cgu_db --collection users_mission --out ./backup/'+nowTime+'/users_mission.json'
+    # }
 
-    gift_exchange_cmd = {
-        'name': 'gift_exchange',
-        'cmd': 'mongoexport --db cgu_db --collection gift_exchange --out ./backup/'+nowTime+'/gift_exchange.json'
-    }
+    # gifts_cmd = {
+    #     'name': 'gifts',
+    #     'cmd': './mongoexport --db cgu_db --collection gifts --out ./backup/'+nowTime+'/gifts.json'
+    # }
 
-    week_count_cmd = {
-        'name': 'week_count',
-        'cmd': 'mongoexport --db cgu_db --collection week_count --out ./backup/'+nowTime+'/week_count.json'
-    }
+    # gift_exchange_cmd = {
+    #     'name': 'gift_exchange',
+    #     'cmd': './mongoexport --db cgu_db --collection gift_exchange --out ./backup/'+nowTime+'/gift_exchange.json'
+    # }
+
+    # week_count_cmd = {
+    #     'name': 'week_count',
+    #     'cmd': './mongoexport --db cgu_db --collection week_count --out ./backup/'+nowTime+'/week_count.json'
+    # }
     
-    # 執行備份
-    cmd_list = [users_cmd, admins_cmd, parents_cmd, comp_users_game_count_cmd, users_daily_games_cmd, users_games_level_cmd, users_games_records_cmd, users_complete_records_cmd, users_mission_cmd, gifts_cmd, gift_exchange_cmd, week_count_cmd]
-    for cmd in cmd_list:
-        try:
-            os.system(cmd['cmd'])
-            print('backup', cmd['name'], 'collection complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
-        except Exception as err:
-            print('backup', cmd['name'], 'error ! at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
-            print('err:', err)
+    # # 執行備份
+    # cmd_list = [users_cmd, admins_cmd, parents_cmd, comp_users_game_count_cmd, users_daily_games_cmd, users_games_level_cmd, users_games_records_cmd, users_complete_records_cmd, users_mission_cmd, gifts_cmd, gift_exchange_cmd, week_count_cmd]
+    # for cmd in cmd_list:
+    #     try:
+    #         os.system(cmd['cmd'])
+    #         print('backup', cmd['name'], 'collection complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+    #     except Exception as err:
+    #         print('backup', cmd['name'], 'error ! at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+    #         print('err:', err)
