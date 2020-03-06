@@ -5,10 +5,10 @@ from pymongo import MongoClient
 BASE_DIR = os.getcwd()
 MODULE_DIR = os.path.join(os.getcwd(), 'app/modules/')
 # MONGO_URI= 'mongodb://localhost:27017'
-MONGO_URI= 'mongodb://34.80.254.96:27017'
+MONGO_URI= 'mongodb://cguot.tk:27017'
 
 try:
-    #client = pymongo.MongoClient(MONGO_URI)
+    # client = MongoClient(MONGO_URI)
     client = MongoClient(host='db', port=27017)
     print('成功連接至mongodb')
 except:
