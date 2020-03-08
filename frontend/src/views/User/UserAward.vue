@@ -7,23 +7,24 @@
       <div style="font-size: 27px;" class="mb-4">
         <i class="fas fa-star award-icon"></i>
         你有 <span style="color: #FFC107; font-weight: bold;">{{tokenNum}}</span> 個星星
+        <p style="font-size: 20px; color: #909399; margin-top:15px;">圖片為參考，數量不足時，實得之物品可能與附圖有異</p>
       </div>
       <!-- 禮品區 -->
       <v-layout align-center justify-start row fill-height wrap class="mb-4">
         <v-flex lg4 md6 v-for="item in giftList" :key="item.name" class="mb-3">
           <v-card>
-            <!-- <v-img :src="item.imgURL" height="200px"></v-img> -->
+            <v-img :src="item.imgURL" height="200px"></v-img>
             <v-card-actions class="mt-3 pb-4 mr-2 ml-2">
               <v-layout row wrap>
                 <v-flex md10>
-                  <span style="display: inline-block; font-size: 23px; height: 28px; line-height: 28px;">{{ item.name }}</span>
+                  <span style="display: inline-block; font-size: 20px; height: 28px; line-height: 28px;">{{ item.name }}</span>
                   <v-icon style="display: inline-block; font-size:17px; line-height: 22px; margin-left: 5px;">star</v-icon>
-                  <span v-if="userAuth=='userTest'" class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken }}</span>
-                  <span v-if="userAuth=='userComp'" class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken*2/5 }}</span>
+                  <span v-if="userAuth=='userTest'" class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken*2 }}</span>
+                  <span v-if="userAuth=='userComp'" class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken }}</span>
                 </v-flex>
                 <v-flex md2>
                   <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userTest'&&tokenNum>=item.needToken" @click="exchange(item.name)">兌換</a>
-                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userComp'&&tokenNum>=(item.needToken*2/5)" @click="exchange(item.name)">兌換</a>
+                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userComp'&&tokenNum>=(item.needToken)" @click="exchange(item.name)">兌換</a>
                 </v-flex>
               </v-layout>
             </v-card-actions class="mt-4 mb-4 mr-2 ml-2">
