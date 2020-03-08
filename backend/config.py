@@ -8,8 +8,8 @@ MODULE_DIR = os.path.join(os.getcwd(), 'app/modules/')
 MONGO_URI= 'mongodb://cguot.tk:27017'
 
 try:
-    # client = MongoClient(MONGO_URI)
-    client = MongoClient(host='db', port=27017)
+    client = MongoClient(MONGO_URI)
+    # client = MongoClient(host='db', port=27017)
     print('成功連接至mongodb')
 except:
     print('連接mongodb失敗')

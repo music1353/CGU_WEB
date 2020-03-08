@@ -23,8 +23,8 @@
                   <span v-if="userAuth=='userComp'" class="mr-2 ml-0" style="display: inline-block; font-size:17px; height: 28px; line-height: 28px;">{{ item.needToken }}</span>
                 </v-flex>
                 <v-flex md2>
-                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userTest'&&tokenNum>=item.needToken" @click="exchange(item.name)">兌換</a>
-                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userComp'&&tokenNum>=(item.needToken)" @click="exchange(item.name)">兌換</a>
+                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userTest'&&tokenNum>=item.needToken*2" @click="onConfirmExchangeDialog(item.name)">兌換</a>
+                  <a href="javascript:void(0)" id="exchange-btn" v-if="userAuth=='userComp'&&tokenNum>=item.needToken" @click="onConfirmExchangeDialog(item.name)">兌換</a>
                 </v-flex>
               </v-layout>
             </v-card-actions class="mt-4 mb-4 mr-2 ml-2">
@@ -35,6 +35,20 @@
     </v-container>
     <message :parentFlag="giftFlag" :parentColor='giftColor' :parentText='giftMsg'></message>
     <nav-footer-simple></nav-footer-simple>
+
+    <!-- confirm change dialog -->
+    <v-dialog v-model="confirmExchangeDialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">兌換禮物</v-card-title>
+        <v-card-text>確定是否要兌換 {{ giftName }} 呢?</v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="red darken-1" flat @click="confirmExchangeDialog=false">取消</v-btn>
+          <v-btn color="green darken-1" flat @click="exchange">好</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <!-- confirm change dialog -->
   </v-content>
 </v-app>
 </div>
@@ -57,10 +71,14 @@ export default {
     return {
       userAuth: '', // 為了控制needToken顯示
       tokenNum: '',
+      giftList: [],
+      giftName: '',
+      // message
       giftFlag: false,
       giftColor: '',
       giftMsg: '',
-      giftList: []
+      // confirm change dialog
+      confirmExchangeDialog: false
     }
   },
   mounted() {
@@ -102,22 +120,28 @@ export default {
         }
       });
     },
-    exchange(giftName) {
+    onConfirmExchangeDialog(giftName) {
+      this.confirmExchangeDialog = true;
+      this.giftName = giftName;
+    },
+    exchange() {
       this.giftFlag = false;
 
       axios.post('/api/gift/exchange', {
-        giftName: giftName
+        giftName: this.giftName
       }).then((response) => {
         let res = response.data;
         if (res.status == '200') {
           this.getTokenNum();
           this.getGiftList();
 
+          this.confirmExchangeDialog = false;
+
           this.giftColor = '8BC34A';
           this.giftMsg = res.msg;
           this.giftFlag = true;
         }
-      })
+      });
     }
   }
 }
