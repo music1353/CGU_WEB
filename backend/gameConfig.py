@@ -77,6 +77,38 @@ DB_GAMES_LIST = [
     ]
 ]
 
+## for userDisplay
+USER_DISPLAY_GAME_LIST = [
+    { 
+        'gameNameEN': 'PrePet',
+        'playTimes': '2',
+        'complete': False
+    }, {
+        'gameNameEN': 'BackPet',
+        'playTimes': '2',
+        'complete': False
+    }, {
+        'gameNameEN': 'PreAnimal',
+        'playTimes': '2',
+        'complete': False
+    }, {
+        'gameNameEN': 'BackAnimal',
+        'playTimes': '2',
+        'complete': False
+    }, {
+        'gameNameEN': 'Teacher',
+        'playTimes': '2',
+        'complete': False
+    }, {
+        'gameNameEN': 'Ball',
+        'playTimes': '2',
+        'complete': False
+    }, {
+        'gameNameEN': 'Where',
+        'playTimes': '2',
+        'complete': False
+    }
+]
 
 ## 測試用
 TEST_GAME_LIST = [

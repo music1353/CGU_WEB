@@ -1,6 +1,6 @@
 import time
 from datetime import datetime
-from gameConfig import DB_GAMES_LIST, TEST_GAME_LIST
+from gameConfig import DB_GAMES_LIST, TEST_GAME_LIST, USER_DISPLAY_GAME_LIST
 from config import client
 import os
 from app.modules.backup_engine.drive import drive
@@ -90,9 +90,23 @@ def init_users_daily_games():
             users_daily_games_collect.insert_one(doc)
             print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
 
+        # FIXME: 20200310 展示用, 一～日都有遊戲
+        elif user['authority'] == 'userDisplay':
+            # comp_users_game_count_collect = db['comp_users_game_count']
+            # comp_users_game_count_doc = comp_users_game_count_collect.find_one({'id': '1'})
+            # count = comp_users_game_count_doc['count']
+
+            games = USER_DISPLAY_GAME_LIST
+            doc['games'] = games
+            users_daily_games_collect.insert_one(doc)
+            print('init', user['account'], 'complete at', time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+
     # 禮拜二、五要練習 => 對照組 comp_users_game_count+1
     if dayOfWeek==1 or dayOfWeek==4: # 禮拜二、五
         comp_users_game_count_collect.find_one_and_update({'_id': '0'}, {'$inc': {'count': 1}})
+
+    # FIXME: 20200310 展示用, 一～日都有遊戲
+    # comp_users_game_count_collect.find_one_and_update({'id': '1'}, {'$inc': {'count': 1}})
 
 
 
