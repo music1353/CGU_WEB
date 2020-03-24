@@ -49,6 +49,8 @@
             <td class="text-xs">{{ props.item.parentAccount }}</td>
             <td class="text-xs">
                <v-chip v-if="props.item.authority.indexOf('Test')>=0" color="primary" text-color="white" small>實驗組</v-chip>
+               <!-- FIXME: 20200310 展示用, 一～日都有遊戲 -->
+               <v-chip v-else-if="props.item.authority.indexOf('Display')>=0" color="orange" text-color="white" small>展示用</v-chip>
                <v-chip v-else color="green" text-color="white" small>對照組</v-chip>
             </td>
             <td class="text-xs">{{ props.item.phone }}</td>
@@ -185,7 +187,7 @@ export default {
       userValid: true,
       parentValid: true,
       authSelect: '實驗組',
-      authItems: ['實驗組', '對照組'],
+      authItems: ['實驗組', '對照組', ' '],
       addNewUserAuthority: 'userTest',
       addNewUserName: '',
       addNewUserAccount: '',
@@ -310,7 +312,12 @@ export default {
         this.addNewParentAuthority='parentComp';
         this.addNewUserAccountHint='建議使用 compXXXX 作為帳號'
         this.addNewParentAccountHint='建議使用 parentCXXXX 作為帳號'
-      }
+      } else if (item == ' ') {
+        this.addNewUserAuthority='userDisplay';
+        this.addNewParentAuthority='parentTest';
+        this.addNewUserAccountHint='建議使用 compXXXX 作為帳號'
+        this.addNewParentAccountHint='建議使用 parentCXXXX 作為帳號'
+      } 
     },
     closeNewOneDialog() {
       this.newOneDialog = false;

@@ -91,7 +91,7 @@ export default {
       axios.get('/api/checkLogin').then((response) => {
         let res = response.data;
         if (res.result.status == true) {
-          if (res.result.authority=='userTest' || res.result.authority=='userComp') {
+          if (res.result.authority=='userTest' || res.result.authority=='userComp' || res.result.authority=='userDisplay') {
             // pass
             this.userAuth = res.result.authority;
           } else if (res.result.authority == 'admin') {

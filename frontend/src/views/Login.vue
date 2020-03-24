@@ -172,7 +172,7 @@ export default {
           if(res.status=='200') {
             if(res.result.authority=='admin')
               this.$router.push('/admin/index');
-            else if(res.result.authority=='userTest' || res.result.authority=='userComp')
+            else if(res.result.authority=='userTest' || res.result.authority=='userComp' || res.result.authority=='userDisplay')
               this.$router.push('/user/index');
             else if(res.result.authority=='parentTest' || res.result.authority=='parentComp')
               this.$router.push('/parent/index');
@@ -190,7 +190,7 @@ export default {
           if(res.result.status == true) {
             if(res.result.authority == 'admin') {
               this.$router.push('/admin/index');
-            } else if(res.result.authority=='userTest' || res.result.authority=='userComp') {
+            } else if(res.result.authority=='userTest' || res.result.authority=='userComp' || res.result.authority=='userDisplay') {
               this.$router.push('/user/index');
             } else if(res.result.authority == 'parentTest' || res.result.authority == 'parentComp') {
               this.$router.push('/parent/index');
