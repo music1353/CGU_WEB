@@ -15,7 +15,7 @@
     "jsonexport": "^2.4.1",
     "material-design-icons": "^3.0.1",
     "material-design-icons-iconfont": "^4.0.5",
-    "papaparse": "^4.6.3",
+    "papaparse": "^5.2.0",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
     "vue-unity-webgl": "^1.2.0",
